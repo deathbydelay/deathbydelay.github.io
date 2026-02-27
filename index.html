@@ -6,296 +6,20 @@
   <title>My Story</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-
-  <style>
-    /* ── CSS Variables ── */
-    :root {
-      --bg:        #0f0f0e;
-      --bg-card:   #161614;
-      --bg-line:   #1e1e1b;
-      --text:      #e8e4dc;
-      --text-muted:#8c8880;
-      --accent:    #c97d4e;       /* warm amber/rust */
-      --accent2:   #6ba3a0;       /* muted teal      */
-      --rule:      #2a2a26;
-      --font-body: 'Cormorant Garamond', Georgia, serif;
-      --font-mono: 'DM Mono', monospace;
-    }
-
-    /* ── Reset & Base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: clamp(1.05rem, 2vw, 1.2rem);
-      font-weight: 300;
-      line-height: 1.8;
-      min-height: 100vh;
-    }
-
-    /* subtle grain overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.35;
-    }
-
-    /* ── Layout ── */
-    .site-wrapper {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 0 clamp(1.5rem, 5vw, 3rem);
-    }
-
-    /* ── Header ── */
-    header {
-      padding: 4rem 0 2rem;
-      border-bottom: 1px solid var(--rule);
-      animation: fadeUp 0.9s ease both;
-    }
-
-    .site-name {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.2rem;
-    }
-
-    h1 {
-      font-size: clamp(2.4rem, 6vw, 3.8rem);
-      font-weight: 300;
-      line-height: 1.15;
-      letter-spacing: -0.01em;
-      color: var(--text);
-    }
-
-    h1 em {
-      font-style: italic;
-      color: var(--accent2);
-    }
-
-    .subtitle {
-      margin-top: 1rem;
-      color: var(--text-muted);
-      font-size: 1rem;
-      font-style: italic;
-      max-width: 520px;
-    }
-
-    /* ── Nav ── */
-    nav {
-      padding: 1.4rem 0;
-      border-bottom: 1px solid var(--rule);
-      animation: fadeUp 0.9s 0.1s ease both;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.2rem 1.8rem;
-    }
-
-    nav a {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    nav a:hover { color: var(--accent); }
-
-    /* ── Main content ── */
-    main { padding: 3rem 0 6rem; }
-
-    /* ── Section headings ── */
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--rule);
-    }
-
-    /* ── Introduction ── */
-    #about {
-      margin-bottom: 5rem;
-      animation: fadeUp 0.9s 0.2s ease both;
-    }
-
-    #about p + p { margin-top: 1.2em; }
-
-    /* ── Timeline ── */
-    #timeline {
-      animation: fadeUp 0.9s 0.3s ease both;
-    }
-
-    .timeline {
-      position: relative;
-      padding-left: 2rem;
-      margin-top: 2rem;
-    }
-
-    /* vertical line */
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0.6rem;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, var(--accent) 0%, var(--rule) 100%);
-    }
-
-    .timeline-entry {
-      position: relative;
-      margin-bottom: 3rem;
-      padding-bottom: 3rem;
-      border-bottom: 1px solid var(--rule);
-    }
-
-    .timeline-entry:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-    }
-
-    /* dot */
-    .timeline-entry::before {
-      content: '';
-      position: absolute;
-      left: -2.4rem;
-      top: 0.55rem;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--accent);
-    }
-
-    .entry-date {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
-      color: var(--accent2);
-      margin-bottom: 0.4rem;
-    }
-
-    .entry-title {
-      font-size: 1.35rem;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 0.8rem;
-      line-height: 1.3;
-    }
-
-    .entry-body p + p { margin-top: 1em; }
-
-    .entry-body { color: var(--text); }
-
-    /* tag/status pill */
-    .tag {
-      display: inline-block;
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.2em 0.7em;
-      border-radius: 2px;
-      margin-bottom: 0.8rem;
-    }
-
-    .tag-ongoing  { background: rgba(201,125,78,0.15); color: var(--accent);  border: 1px solid rgba(201,125,78,0.3); }
-    .tag-resolved { background: rgba(107,163,160,0.12); color: var(--accent2); border: 1px solid rgba(107,163,160,0.3); }
-    .tag-current  { background: rgba(201,125,78,0.25); color: var(--accent);  border: 1px solid var(--accent); }
-
-    /* ── Current Status ── */
-    #status {
-      margin-top: 5rem;
-      animation: fadeUp 0.9s 0.4s ease both;
-    }
-
-    .status-card {
-      background: var(--bg-card);
-      border: 1px solid var(--rule);
-      border-left: 3px solid var(--accent);
-      padding: 1.8rem 2rem;
-      margin-top: 1.5rem;
-    }
-
-    .status-card p + p { margin-top: 1em; }
-
-    .last-updated {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      color: var(--text-muted);
-      margin-top: 1.2rem;
-      letter-spacing: 0.1em;
-    }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--rule);
-      padding: 2rem 0;
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    /* ── Animations ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0);    }
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 480px) {
-      .timeline { padding-left: 1.5rem; }
-      .timeline-entry::before { left: -1.9rem; }
-      footer { flex-direction: column; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 <div class="site-wrapper">
 
-  <!-- ── Header ── -->
+  <!-- Header -->
   <header>
     <p class="site-name">Your Name Here</p>
     <h1>This is <em>my story.</em></h1>
     <p class="subtitle">A plain account of what I've been through, written so I don't have to keep repeating it.</p>
   </header>
 
-  <!-- ── Navigation ── -->
+  <!-- Navigation -->
   <nav>
     <ul>
       <li><a href="#about">About</a></li>
@@ -306,92 +30,39 @@
 
   <main>
 
-    <!-- ── About / Introduction ── -->
+    <!-- About -->
     <section id="about">
       <p class="section-label">Introduction</p>
-
       <p>
         If you've landed here, it's probably because I handed you a card or pointed you at a QR code. That's intentional. There are only so many times a person can tell the same story, and I'd rather you have the full picture than a fragmented version delivered on a rough day.
       </p>
       <p>
         This page is a living document. I update it when things change. What you read here is as accurate as I can make it at the time of writing. If you have questions after reading, I'm happy to talk — but at least we'll be starting from the same place.
       </p>
-      <p>
-        <em>— [Your Name]</em>
-      </p>
+      <p><em>— [Your Name]</em></p>
     </section>
 
-    <!-- ── Timeline ── -->
+    <!-- Timeline — built from entries.json by main.js -->
     <section id="timeline">
       <p class="section-label">Timeline</p>
-
-      <div class="timeline">
-
-        <!-- Entry 1 — example, replace with your own -->
-        <article class="timeline-entry">
-          <p class="entry-date">Month Year</p>
-          <span class="tag tag-resolved">Resolved</span>
-          <h2 class="entry-title">First thing that happened</h2>
-          <div class="entry-body">
-            <p>
-              Describe what happened here. Write it in your own voice — this is your story, not a medical chart. You can be as detailed or as brief as you want. If something is still difficult to write about, a single sentence is enough.
-            </p>
-          </div>
-        </article>
-
-        <!-- Entry 2 -->
-        <article class="timeline-entry">
-          <p class="entry-date">Month Year</p>
-          <span class="tag tag-ongoing">Ongoing</span>
-          <h2 class="entry-title">Something that developed over time</h2>
-          <div class="entry-body">
-            <p>
-              This is another entry. You can use the tags to indicate whether something is resolved, still ongoing, or the current focus of treatment. The tag colors change automatically — orange/amber for ongoing things, teal for resolved ones.
-            </p>
-            <p>
-              Add as many of these entries as you need. The timeline grows downward with the most recent at the top, or oldest first — whichever feels right to you. Right now it runs oldest-first.
-            </p>
-          </div>
-        </article>
-
-        <!-- Entry 3 — most recent -->
-        <article class="timeline-entry">
-          <p class="entry-date">Month Year</p>
-          <span class="tag tag-current">Current</span>
-          <h2 class="entry-title">Where things stand right now</h2>
-          <div class="entry-body">
-            <p>
-              Your most recent entry. This is the thing you're dealing with right now, the reason today might be a rough day. Write it plainly. People will understand more than you expect, and the ones who matter will be glad they read it.
-            </p>
-          </div>
-        </article>
-
-      </div>
+      <div class="timeline" id="timeline-container"></div>
     </section>
 
-    <!-- ── Current Status ── -->
+    <!-- Current Status — built from entries.json by main.js -->
     <section id="status">
       <p class="section-label">Current Status</p>
-
-      <div class="status-card">
-        <p>
-          This is where you put a plain summary of today — how you're doing, what treatment or recovery looks like right now, and what would actually be helpful from the people around you (or what you'd rather they didn't do).
-        </p>
-        <p>
-          You don't owe anyone positivity here. If it's hard, say it's hard. If you're okay, say that too. This section is the one most worth keeping current.
-        </p>
-        <p class="last-updated">Last updated: [date]</p>
-      </div>
+      <div id="status-card"></div>
     </section>
 
   </main>
 
-  <!-- ── Footer ── -->
+  <!-- Footer -->
   <footer>
     <span>[Your Name]</span>
     <span>Updated as things change.</span>
   </footer>
 
 </div>
+<script src="main.js"></script>
 </body>
 </html>

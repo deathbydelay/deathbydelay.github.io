@@ -1,0 +1,26 @@
+{
+  "status": {
+    "body": "This is where you put a plain summary of today — how you're doing, what treatment or recovery looks like right now, and what would actually be helpful from the people around you (or what you'd rather they didn't do).\n\nYou don't owe anyone positivity here. If it's hard, say it's hard. If you're okay, say that too. This section is the one most worth keeping current.",
+    "lastUpdated": "February 2026"
+  },
+  "entries": [
+    {
+      "date": "Month Year",
+      "tag": "resolved",
+      "title": "First thing that happened",
+      "body": "Describe what happened here. Write it in your own voice — this is your story, not a medical chart. You can be as detailed or as brief as you want. If something is still difficult to write about, a single sentence is enough."
+    },
+    {
+      "date": "Month Year",
+      "tag": "ongoing",
+      "title": "Something that developed over time",
+      "body": "This is another entry. You can use the tags to indicate whether something is resolved, still ongoing, or the current focus of treatment.\n\nAdd as many of these entries as you need. The timeline runs oldest first."
+    },
+    {
+      "date": "Month Year",
+      "tag": "current",
+      "title": "Where things stand right now",
+      "body": "Your most recent entry. This is the thing you're dealing with right now. Write it plainly. People will understand more than you expect, and the ones who matter will be glad they read it."
+    }
+  ]
+}

@@ -22,16 +22,16 @@ function buildTimeline(entries) {
     const article = document.createElement('article');
     article.className = 'timeline-entry';
 
-    // Split body on newlines to create separate paragraphs
-    const paragraphs = entry.body
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0)
-      .map(line => `<p>${line}</p>`)
-      .join('');
+    // Body can be an array of paragraphs (from new-entry.html)
+    // or a plain string — handle both gracefully
+    const lines = Array.isArray(entry.body)
+      ? entry.body
+      : entry.body.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    const paragraphs = lines.map(line => `<p>${line}</p>`).join('');
 
     article.innerHTML = `
       <p class="entry-date">${entry.date}</p>
+      <span class="tag tag-${entry.tag}">${entry.tag}</span>
       <h2 class="entry-title">${entry.title}</h2>
       <div class="entry-body">${paragraphs}</div>
     `;

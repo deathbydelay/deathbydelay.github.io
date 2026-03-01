@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Entry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Tool-specific styles */
+    .tool-wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 3rem);
+    }
+
+    .tool-header {
+      padding: 4rem 0 2rem;
+      border-bottom: 1px solid var(--rule);
+      animation: fadeUp 0.9s ease both;
+    }
+
+    .tool-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+    }
+
+    .tool-body {
+      padding: 3rem 0 6rem;
+      animation: fadeUp 0.9s 0.1s ease both;
+    }
+
+    .field {
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--rule);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 300;
+      padding: 0.8rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      border-radius: 0;
+      appearance: none;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    select {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+    }
+
+    select option {
+      background: var(--bg-card);
+    }
+
+    textarea {
+      min-height: 220px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .hint {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.7em 1.8em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+
+    /* Output area */
+    .output-section {
+      margin-top: 3rem;
+      display: none;
+    }
+
+    .output-section.visible {
+      display: block;
+    }
+
+    .output-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .output-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .output-box {
+      background: var(--bg-card);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--accent2);
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      line-height: 1.8;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+      user-select: all;
+    }
+
+    .copy-confirm {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      margin-top: 0.8rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copy-confirm.show {
+      opacity: 1;
+    }
+
+    .instructions {
+      background: var(--bg-card);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--rule);
+      padding: 1.2rem 1.5rem;
+      margin-top: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      line-height: 1.9;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .instructions strong {
+      color: var(--text);
+      font-weight: 400;
+    }
+  </style>
+</head>
+
+<body>
+<div class="tool-wrapper">
+
+  <header class="tool-header">
+    <p class="site-name">Entry Builder</p>
+    <h1>New <em>timeline entry.</em></h1>
+    <p class="subtitle">Paste your content freely. This tool formats it for entries.json.</p>
+  </header>
+
+  <div class="tool-body">
+
+    <div class="field">
+      <label for="entry-date">Date</label>
+      <input type="text" id="entry-date" placeholder="e.g. March 2024">
+    </div>
+
+    <div class="field">
+      <label for="entry-title">Title</label>
+      <input type="text" id="entry-title" placeholder="A short title for this entry">
+    </div>
+
+    <div class="field">
+      <label for="entry-body">Body</label>
+      <textarea id="entry-body" placeholder="Paste from Google Docs here. Line breaks are handled automatically."></textarea>
+      <p class="hint">Paste freely — real line breaks will be converted correctly.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="generateEntry()">Generate Entry</button>
+      <button class="btn" onclick="clearForm()">Clear</button>
+    </div>
+
+    <!-- Output -->
+    <div class="output-section" id="output-section">
+      <p class="output-label">Generated JSON</p>
+      <div class="output-box" id="output-box"></div>
+      <p class="copy-confirm" id="copy-confirm">✓ Copied to clipboard</p>
+      <div class="btn-row">
+        <button class="btn" onclick="copyOutput()">Copy to Clipboard</button>
+      </div>
+
+      <div class="instructions">
+        <strong>What to do next:</strong><br>
+        1. Copy the generated JSON above<br>
+        2. Open entries.json in VS Code<br>
+        3. Paste it as a new item inside the "entries" array<br>
+        4. Make sure there's a comma after the previous entry<br>
+        5. Save the file — Live Server will refresh automatically
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function generateEntry() {
+    const date  = document.getElementById('entry-date').value.trim();
+    const title = document.getElementById('entry-title').value.trim();
+    const body  = document.getElementById('entry-body').value;
+
+    if (!date || !title || !body.trim()) {
+      alert('Please fill in all three fields before generating.');
+      return;
+    }
+
+    // Convert the body into an array of non-empty paragraph strings
+    const paragraphs = body
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+
+    // Build the JSON entry as a formatted string
+    const entry = {
+      date:  date,
+      title: title,
+      body:  paragraphs
+    };
+
+    const output = JSON.stringify(entry, null, 2);
+
+    document.getElementById('output-box').textContent = output;
+    document.getElementById('output-section').classList.add('visible');
+    document.getElementById('copy-confirm').classList.remove('show');
+
+    // Scroll to output
+    document.getElementById('output-section').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function copyOutput() {
+    const text = document.getElementById('output-box').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const confirm = document.getElementById('copy-confirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2500);
+    });
+  }
+
+  function clearForm() {
+    document.getElementById('entry-date').value  = '';
+    document.getElementById('entry-title').value = '';
+    document.getElementById('entry-body').value  = '';
+    document.getElementById('output-section').classList.remove('visible');
+    document.getElementById('output-box').textContent = '';
+  }
+</script>
+
+</body>
+</html>

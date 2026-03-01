@@ -4,7 +4,7 @@
   --bg-card:   #161614;
   --bg-line:   #1e1e1b;
   --text:      #e8e4dc;
-  --text-muted:#8c8880;
+  --text-muted:#b8b3a9;
   --accent:    #c97d4e;       /* warm amber/rust */
   --accent2:   #6ba3a0;       /* muted teal      */
   --rule:      #2a2a26;
@@ -143,6 +143,94 @@ main { padding: 3rem 0 6rem; }
 /* ── Timeline ── */
 #timeline {
   animation: fadeUp 0.9s 0.3s ease both;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-header .section-label {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+/* TOC */
+.toc-wrapper {
+  position: relative;
+}
+
+.toc-toggle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  background: transparent;
+  border: 1px solid rgba(107,163,160,0.3);
+  padding: 0.3em 0.9em;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.toc-toggle:hover {
+  color: var(--accent);
+  border-color: rgba(201,125,78,0.4);
+}
+
+.toc-list {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent2);
+  list-style: none;
+  min-width: 260px;
+  max-width: 340px;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.toc-list.toc-open {
+  display: block;
+}
+
+.toc-list li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.toc-list li:last-child {
+  border-bottom: none;
+}
+
+.toc-list a {
+  display: block;
+  padding: 0.7rem 1rem;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  transition: background 0.15s;
+}
+
+.toc-list a:hover {
+  background: var(--bg-line);
+}
+
+.toc-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--accent2);
+  margin-bottom: 0.2rem;
 }
 
 .timeline {

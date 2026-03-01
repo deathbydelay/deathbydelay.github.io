@@ -31,7 +31,6 @@ function buildTimeline(entries) {
 
     article.innerHTML = `
       <p class="entry-date">${entry.date}</p>
-      <span class="tag tag-${entry.tag}">${entry.tag}</span>
       <h2 class="entry-title">${entry.title}</h2>
       <div class="entry-body">${paragraphs}</div>
     `;

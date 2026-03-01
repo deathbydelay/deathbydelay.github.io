@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Story</title>
+  <title>A Cautionary Tale of Procrastination and Deception</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -40,13 +40,21 @@
       </p>
     </section>
 
-    <!-- Timeline — built from entries.json by main.js -->
+    <!-- Timeline -->
     <section id="timeline">
-      <p class="section-label">Timeline</p>
+      <div class="timeline-header">
+        <p class="section-label">Timeline</p>
+        <div class="toc-wrapper">
+          <button class="toc-toggle" id="toc-toggle" aria-expanded="false">
+            Jump to entry ↓
+          </button>
+          <ul class="toc-list" id="toc-list"></ul>
+        </div>
+      </div>
       <div class="timeline" id="timeline-container"></div>
     </section>
 
-    <!-- Current Status — built from entries.json by main.js -->
+    <!-- Current Status -->
     <section id="status">
       <p class="section-label">Current Status</p>
       <div id="status-card"></div>

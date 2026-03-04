@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radiation Log — A Cautionary Tale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    .page-header {
+      padding: 4rem 0 2rem;
+      border-bottom: 1px solid var(--rule);
+      animation: fadeUp 0.9s ease both;
+    }
+
+    .page-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+    }
+
+    .page-body {
+      padding: 3rem 0 6rem;
+    }
+
+    /* ── Progress bar ── */
+    .progress-section {
+      margin-bottom: 4rem;
+      animation: fadeUp 0.9s 0.2s ease both;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .progress-meta span:last-child {
+      color: var(--accent);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: var(--rule);
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--accent2), var(--accent));
+      transition: width 0.8s ease;
+    }
+
+    .progress-ticks {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.4rem;
+    }
+
+    .progress-ticks span {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Chart cards ── */
+    .chart-section {
+      margin-bottom: 4rem;
+      animation: fadeUp 0.9s 0.3s ease both;
+    }
+
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--rule);
+      padding: 1.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 280px;
+    }
+
+    /* ── Log table ── */
+    .log-section {
+      margin-bottom: 4rem;
+      animation: fadeUp 0.9s 0.4s ease both;
+    }
+
+    .log-table-wrapper {
+      overflow-x: auto;
+      margin-top: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+    }
+
+    thead tr {
+      border-bottom: 1px solid var(--accent);
+    }
+
+    th {
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      color: var(--accent);
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    td {
+      padding: 0.6rem 0.8rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    td.notes-cell {
+      white-space: normal;
+      max-width: 200px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      letter-spacing: 0;
+    }
+
+    /* value coloring */
+    .val-low    { color: var(--accent2); }
+    .val-mid    { color: var(--text); }
+    .val-high   { color: var(--accent); }
+
+    .no-data {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      padding: 2rem 0;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<div class="site-wrapper">
+
+  <!-- Header -->
+  <header class="page-header">
+    <p class="site-name">Radiation Therapy</p>
+    <h1>Session <em>log & progress.</em></h1>
+    <p class="subtitle">33 sessions total. Updated after each appointment.</p>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="index.html">← Back</a></li>
+      <li><a href="#progress">Progress</a></li>
+      <li><a href="#symptoms">Symptoms</a></li>
+      <li><a href="#duration">Duration</a></li>
+      <li><a href="#log">Full Log</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-body">
+
+    <!-- Progress -->
+    <section id="progress" class="progress-section">
+      <p class="section-label">Course Progress</p>
+      <div class="progress-meta">
+        <span id="progress-label">Session 0 of 33</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="progress-ticks">
+        <span>Start</span>
+        <span>Halfway</span>
+        <span>Complete</span>
+      </div>
+    </section>
+
+    <!-- Symptom Trends -->
+    <section id="symptoms" class="chart-section">
+      <p class="section-label">Symptom Trends</p>
+      <div class="chart-card">
+        <div class="chart-container">
+          <canvas id="symptom-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Duration -->
+    <section id="duration" class="chart-section">
+      <p class="section-label">Appointment Duration</p>
+      <div class="chart-card">
+        <div class="chart-container">
+          <canvas id="duration-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full Log Table -->
+    <section id="log" class="log-section">
+      <p class="section-label">Full Log</p>
+      <div class="log-table-wrapper">
+        <div id="log-table-container">
+          <p class="no-data">No sessions logged yet.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <span>Updated as things change.</span>
+  </footer>
+
+</div>
+
+<script>
+  const TOTAL_SESSIONS = 33;
+
+  // ── Chart defaults ────────────────────────────────────────────────────────
+  Chart.defaults.color          = '#8c8880';
+  Chart.defaults.font.family    = "'DM Mono', monospace";
+  Chart.defaults.font.size      = 10;
+  Chart.defaults.borderColor    = '#2a2a26';
+
+  // ── Load CSV ──────────────────────────────────────────────────────────────
+  fetch('radiation-log.csv')
+    .then(r => r.text())
+    .then(csv => {
+      const rows = parseCSV(csv);
+      if (rows.length === 0) return;
+      updateProgress(rows);
+      buildSymptomChart(rows);
+      buildDurationChart(rows);
+      buildLogTable(rows);
+    })
+    .catch(err => console.error('Could not load radiation-log.csv:', err));
+
+  // ── CSV Parser ────────────────────────────────────────────────────────────
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    if (lines.length < 2) return [];
+    // Skip header row (index 0)
+    return lines.slice(1).map(line => {
+      // Handle quoted fields (notes column)
+      const fields = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          fields.push(current.trim());
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+      fields.push(current.trim());
+      return {
+        date:           fields[0]  || '',
+        session:        parseInt(fields[1]) || 0,
+        apptStart:      fields[2]  || '',
+        apptEnd:        fields[3]  || '',
+        fatigue:        parseFloat(fields[4])  || null,
+        skinCondition:  parseFloat(fields[5])  || null,
+        skinColor:      parseFloat(fields[6])  || null,
+        nausea:         parseFloat(fields[7])  || null,
+        pain:           parseFloat(fields[8])  || null,
+        notes:          fields[9]  || ''
+      };
+    }).filter(r => r.date);
+  }
+
+  // ── Time helpers ──────────────────────────────────────────────────────────
+  function timeDiffMinutes(start, end) {
+    if (!start || !end) return null;
+    const [sh, sm] = start.split(':').map(Number);
+    const [eh, em] = end.split(':').map(Number);
+    const diff = (eh * 60 + em) - (sh * 60 + sm);
+    return diff > 0 ? diff : null;
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  // ── Progress bar ──────────────────────────────────────────────────────────
+  function updateProgress(rows) {
+    const latest = Math.max(...rows.map(r => r.session));
+    const pct    = Math.round((latest / TOTAL_SESSIONS) * 100);
+    document.getElementById('progress-label').textContent = `Session ${latest} of ${TOTAL_SESSIONS}`;
+    document.getElementById('progress-pct').textContent   = `${pct}%`;
+    document.getElementById('progress-fill').style.width  = `${pct}%`;
+  }
+
+  // ── Symptom chart ─────────────────────────────────────────────────────────
+  function buildSymptomChart(rows) {
+    const labels = rows.map(r => `#${r.session}`);
+    const ctx    = document.getElementById('symptom-chart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Fatigue',
+            data: rows.map(r => r.fatigue),
+            borderColor: '#c97d4e',
+            backgroundColor: 'rgba(201,125,78,0.08)',
+            tension: 0.3,
+            pointRadius: 3,
+            fill: false
+          },
+          {
+            label: 'Skin Condition',
+            data: rows.map(r => r.skinCondition),
+            borderColor: '#6ba3a0',
+            backgroundColor: 'rgba(107,163,160,0.08)',
+            tension: 0.3,
+            pointRadius: 3,
+            fill: false
+          },
+          {
+            label: 'Skin Color',
+            data: rows.map(r => r.skinColor),
+            borderColor: '#a08060',
+            backgroundColor: 'rgba(160,128,96,0.08)',
+            tension: 0.3,
+            pointRadius: 3,
+            fill: false
+          },
+          {
+            label: 'Nausea',
+            data: rows.map(r => r.nausea),
+            borderColor: '#7a9e7e',
+            backgroundColor: 'rgba(122,158,126,0.08)',
+            tension: 0.3,
+            pointRadius: 3,
+            fill: false
+          },
+          {
+            label: 'Pain',
+            data: rows.map(r => r.pain),
+            borderColor: '#9e7a8a',
+            backgroundColor: 'rgba(158,122,138,0.08)',
+            tension: 0.3,
+            pointRadius: 3,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            min: 1,
+            max: 10,
+            ticks: { stepSize: 1 },
+            grid: { color: '#2a2a26' }
+          },
+          x: {
+            grid: { color: '#2a2a26' }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: { boxWidth: 12, padding: 16 }
+          }
+        }
+      }
+    });
+  }
+
+  // ── Duration chart ────────────────────────────────────────────────────────
+  function buildDurationChart(rows) {
+    const labels   = rows.map(r => `#${r.session}`);
+    const apptMins = rows.map(r => timeDiffMinutes(r.apptStart, r.apptEnd));
+    const ctx      = document.getElementById('duration-chart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Appointment (min)',
+            data: apptMins,
+            borderColor: '#c97d4e',
+            backgroundColor: 'rgba(201,125,78,0.08)',
+            tension: 0,
+            pointRadius: 3,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 5 },
+            grid: { color: '#2a2a26' }
+          },
+          x: {
+            grid: { color: '#2a2a26' }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: { boxWidth: 12, padding: 16 }
+          }
+        }
+      }
+    });
+  }
+
+  // ── Log table ─────────────────────────────────────────────────────────────
+  function buildLogTable(rows) {
+    const container = document.getElementById('log-table-container');
+
+    function colorClass(val) {
+      if (val === null) return '';
+      if (val <= 3) return 'val-low';
+      if (val <= 6) return 'val-mid';
+      return 'val-high';
+    }
+
+    const reversed = [...rows].reverse();
+
+    let html = `
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Appt Duration</th>
+            <th>Fatigue</th>
+            <th>Skin Cond.</th>
+            <th>Skin Color</th>
+            <th>Nausea</th>
+            <th>Pain</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    reversed.forEach(r => {
+      html += `
+        <tr>
+          <td>${r.session}</td>
+          <td>${formatDate(r.date)}</td>
+          <td>${timeDiffMinutes(r.apptStart, r.apptEnd) !== null ? timeDiffMinutes(r.apptStart, r.apptEnd) + 'm' : '—'}</td>
+          <td class="${colorClass(r.fatigue)}">${r.fatigue      ?? '—'}</td>
+          <td class="${colorClass(r.skinCondition)}">${r.skinCondition ?? '—'}</td>
+          <td class="${colorClass(r.skinColor)}">${r.skinColor   ?? '—'}</td>
+          <td class="${colorClass(r.nausea)}">${r.nausea       ?? '—'}</td>
+          <td class="${colorClass(r.pain)}">${r.pain         ?? '—'}</td>
+          <td class="notes-cell">${r.notes || '—'}</td>
+        </tr>
+      `;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  }
+</script>
+
+</body>
+</html>

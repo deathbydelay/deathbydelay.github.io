@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radiation Log Entry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 3rem);
+    }
+
+    .tool-header {
+      padding: 4rem 0 2rem;
+      border-bottom: 1px solid var(--rule);
+      animation: fadeUp 0.9s ease both;
+    }
+
+    .tool-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+    }
+
+    .tool-body {
+      padding: 3rem 0 6rem;
+      animation: fadeUp 0.9s 0.1s ease both;
+    }
+
+    .field {
+      margin-bottom: 2rem;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 480px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--rule);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 300;
+      padding: 0.8rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      border-radius: 0;
+      appearance: none;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    /* Scale inputs */
+    .scale-group {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .scale-group { grid-template-columns: 1fr 1fr; }
+    }
+
+    .scale-field label {
+      margin-bottom: 0.4rem;
+    }
+
+    .scale-field .scale-hint {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      opacity: 1;
+    }
+
+    textarea {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.7em 1.8em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+
+    .output-section {
+      margin-top: 3rem;
+      display: none;
+    }
+
+    .output-section.visible {
+      display: block;
+    }
+
+    .output-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .output-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .output-box {
+      background: var(--bg-card);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--accent2);
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      line-height: 1.8;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-all;
+      user-select: all;
+    }
+
+    .copy-confirm {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      margin-top: 0.8rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copy-confirm.show { opacity: 1; }
+
+    .instructions {
+      background: var(--bg-card);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--rule);
+      padding: 1.2rem 1.5rem;
+      margin-top: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      line-height: 1.9;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .instructions strong {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 2.5rem 0;
+    }
+  </style>
+</head>
+
+<body>
+<div class="tool-wrapper">
+
+  <header class="tool-header">
+    <p class="site-name">Radiation Log</p>
+    <h1>New <em>log entry.</em></h1>
+    <p class="subtitle">Fill in today's session data. The output is a CSV row ready to append to radiation-log.csv.</p>
+  </header>
+
+  <div class="tool-body">
+
+    <!-- Date & Session -->
+    <div class="field-row">
+      <div class="field">
+        <label for="log-date">Date</label>
+        <input type="date" id="log-date">
+      </div>
+      <div class="field">
+        <label for="log-session">Session #</label>
+        <input type="number" id="log-session" min="1" placeholder="e.g. 1">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Appointment times -->
+    <div class="field-row">
+      <div class="field">
+        <label for="appt-start">Appointment Start</label>
+        <input type="time" id="appt-start">
+      </div>
+      <div class="field">
+        <label for="appt-end">Appointment End</label>
+        <input type="time" id="appt-end">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Scale fields -->
+    <div class="scale-group">
+      <div class="scale-field">
+        <label for="fatigue">Fatigue</label>
+        <span class="scale-hint">1 = none · 10 = severe</span>
+        <input type="number" id="fatigue" min="1" max="10" placeholder="1–10">
+      </div>
+      <div class="scale-field">
+        <label for="skin-condition">Skin Condition</label>
+        <span class="scale-hint">1 = normal · 10 = severely dry</span>
+        <input type="number" id="skin-condition" min="1" max="10" placeholder="1–10">
+      </div>
+      <div class="scale-field">
+        <label for="skin-color">Skin Color</label>
+        <span class="scale-hint">1 = normal · 10 = severely burned</span>
+        <input type="number" id="skin-color" min="1" max="10" placeholder="1–10">
+      </div>
+      <div class="scale-field">
+        <label for="nausea">Nausea</label>
+        <span class="scale-hint">1 = none · 10 = severe</span>
+        <input type="number" id="nausea" min="1" max="10" placeholder="1–10">
+      </div>
+      <div class="scale-field">
+        <label for="pain">Pain</label>
+        <span class="scale-hint">1 = none · 10 = severe</span>
+        <input type="number" id="pain" min="1" max="10" placeholder="1–10">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Notes -->
+    <div class="field">
+      <label for="log-notes">Notes</label>
+      <textarea id="log-notes" placeholder="Anything worth capturing — reactions, observations, how the day felt."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="generateRow()">Generate CSV Row</button>
+      <button class="btn" onclick="clearForm()">Clear</button>
+    </div>
+
+    <!-- Output -->
+    <div class="output-section" id="output-section">
+      <p class="output-label">Generated CSV Row</p>
+      <div class="output-box" id="output-box"></div>
+      <p class="copy-confirm" id="copy-confirm">✓ Copied to clipboard</p>
+      <div class="btn-row">
+        <button class="btn" onclick="copyOutput()">Copy to Clipboard</button>
+      </div>
+
+      <div class="instructions">
+        <strong>What to do next:</strong><br>
+        1. Copy the generated row above<br>
+        2. Open radiation-log.csv in VS Code<br>
+        3. Paste it as a new line at the bottom of the file<br>
+        4. Save — the radiation page will reflect the new data automatically
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Set today's date as default
+  document.getElementById('log-date').valueAsDate = new Date();
+
+  function generateRow() {
+    const date          = document.getElementById('log-date').value;
+    const session       = document.getElementById('log-session').value.trim();
+    const apptStart     = document.getElementById('appt-start').value;
+    const apptEnd       = document.getElementById('appt-end').value;
+    const fatigue       = document.getElementById('fatigue').value;
+    const skinCondition = document.getElementById('skin-condition').value;
+    const skinColor     = document.getElementById('skin-color').value;
+    const nausea        = document.getElementById('nausea').value;
+    const pain          = document.getElementById('pain').value;
+    const notes         = document.getElementById('log-notes').value.trim();
+
+    if (!date || !session) {
+      alert('Date and Session # are required.');
+      return;
+    }
+
+    // Escape notes for CSV — wrap in quotes and escape any internal quotes
+    const safeNotes = '"' + notes.replace(/"/g, '""').replace(/\n/g, ' ') + '"';
+
+    const row = [
+      date,
+      session,
+      apptStart,
+      apptEnd,
+      fatigue,
+      skinCondition,
+      skinColor,
+      nausea,
+      pain,
+      safeNotes
+    ].join(',');
+
+    document.getElementById('output-box').textContent = row;
+    document.getElementById('output-section').classList.add('visible');
+    document.getElementById('copy-confirm').classList.remove('show');
+    document.getElementById('output-section').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function copyOutput() {
+    const text = document.getElementById('output-box').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const confirm = document.getElementById('copy-confirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2500);
+    });
+  }
+
+  function clearForm() {
+    document.getElementById('log-date').valueAsDate = new Date();
+    document.getElementById('log-session').value    = '';
+    document.getElementById('appt-start').value     = '';
+    document.getElementById('appt-end').value       = '';
+    document.getElementById('fatigue').value        = '';
+    document.getElementById('skin-condition').value = '';
+    document.getElementById('skin-color').value     = '';
+    document.getElementById('nausea').value         = '';
+    document.getElementById('pain').value           = '';
+    document.getElementById('log-notes').value      = '';
+    document.getElementById('output-section').classList.remove('visible');
+  }
+</script>
+
+</body>
+</html>

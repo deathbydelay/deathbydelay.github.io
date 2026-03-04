@@ -266,14 +266,19 @@
       .map(line => line.trim())
       .filter(line => line.length > 0);
 
-    // Build the JSON entry as a formatted string
+    // Build the JSON entry as a formatted string with indentation and trailing comma
     const entry = {
       date:  date,
       title: title,
       body:  paragraphs
     };
 
-    const output = JSON.stringify(entry, null, 2);
+    // Indent each line by 4 spaces to match entries.json array contents, add trailing comma
+    const raw = JSON.stringify(entry, null, 2);
+    const output = raw
+      .split('\n')
+      .map(line => '    ' + line)
+      .join('\n') + ',';
 
     document.getElementById('output-box').textContent = output;
     document.getElementById('output-section').classList.add('visible');

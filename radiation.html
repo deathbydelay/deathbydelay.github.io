@@ -174,6 +174,7 @@
       <li><a href="#progress">Progress</a></li>
       <li><a href="#symptoms">Symptoms</a></li>
       <li><a href="#duration">Duration</a></li>
+      <li><a href="#deviation">Deviation</a></li>
       <li><a href="#log">Full Log</a></li>
     </ul>
   </nav>
@@ -217,6 +218,16 @@
       </div>
     </section>
 
+    <!-- Start Time Deviation -->
+    <section id="deviation" class="chart-section">
+      <p class="section-label">Start Time Deviation from 1:00 PM</p>
+      <div class="chart-card">
+        <div class="chart-container">
+          <canvas id="deviation-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
     <!-- Full Log Table -->
     <section id="log" class="log-section">
       <p class="section-label">Full Log</p>
@@ -253,6 +264,7 @@
       updateProgress(rows);
       buildSymptomChart(rows);
       buildDurationChart(rows);
+      buildDeviationChart(rows);
       buildLogTable(rows);
     })
     .catch(err => console.error('Could not load radiation-log.csv:', err));
@@ -436,6 +448,73 @@
         plugins: {
           legend: {
             labels: { boxWidth: 12, padding: 16 }
+          }
+        }
+      }
+    });
+  }
+
+  // ── Deviation chart ───────────────────────────────────────────────────────
+  function buildDeviationChart(rows) {
+    const SCHEDULED_HOUR   = 13; // 1:00 PM in 24hr
+    const SCHEDULED_MINUTE = 0;
+
+    const labels    = rows.map(r => `#${r.session}`);
+    const deviations = rows.map(r => {
+      if (!r.apptStart) return null;
+      const [h, m] = r.apptStart.split(':').map(Number);
+      return (h * 60 + m) - (SCHEDULED_HOUR * 60 + SCHEDULED_MINUTE);
+    });
+
+    const ctx = document.getElementById('deviation-chart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Minutes from scheduled start',
+            data: deviations,
+            borderColor: '#6ba3a0',
+            backgroundColor: 'rgba(107,163,160,0.08)',
+            tension: 0,
+            pointRadius: 3,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            ticks: {
+              stepSize: 5,
+              callback: val => (val > 0 ? `+${val}` : val) + ' min'
+            },
+            grid: { color: '#2a2a26' },
+            // Draw a bold zero line
+            afterDataLimits(scale) {
+              if (scale.max < 5)  scale.max = 5;
+              if (scale.min > -5) scale.min = -5;
+            }
+          },
+          x: { grid: { color: '#2a2a26' } }
+        },
+        plugins: {
+          legend: { labels: { boxWidth: 12, padding: 16 } },
+          annotation: {
+            annotations: {
+              zeroLine: {
+                type: 'line',
+                yMin: 0,
+                yMax: 0,
+                borderColor: 'rgba(232,228,220,0.2)',
+                borderWidth: 1,
+                borderDash: [4, 4]
+              }
+            }
           }
         }
       }

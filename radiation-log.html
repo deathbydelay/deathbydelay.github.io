@@ -249,15 +249,39 @@
 
     <hr class="divider">
 
-    <!-- Appointment times -->
+    <!-- Travel to -->
+    <div class="field-row">
+      <div class="field">
+        <label for="travel-to-start">Travel To Start</label>
+        <input type="text" id="travel-to-start" placeholder="e.g. 12:30">
+      </div>
+      <div class="field">
+        <label for="travel-to-end">Travel To End</label>
+        <input type="text" id="travel-to-end" placeholder="e.g. 12:54">
+      </div>
+    </div>
+
+    <!-- Appointment -->
     <div class="field-row">
       <div class="field">
         <label for="appt-start">Appointment Start</label>
-        <input type="time" id="appt-start">
+        <input type="text" id="appt-start" placeholder="e.g. 13:06">
       </div>
       <div class="field">
         <label for="appt-end">Appointment End</label>
-        <input type="time" id="appt-end">
+        <input type="text" id="appt-end" placeholder="e.g. 13:46">
+      </div>
+    </div>
+
+    <!-- Travel from -->
+    <div class="field-row">
+      <div class="field">
+        <label for="travel-from-start">Travel From Start</label>
+        <input type="text" id="travel-from-start" placeholder="e.g. 13:48">
+      </div>
+      <div class="field">
+        <label for="travel-from-end">Travel From End</label>
+        <input type="text" id="travel-from-end" placeholder="e.g. 14:25">
       </div>
     </div>
 
@@ -331,12 +355,25 @@
   // Set today's date as default
   document.getElementById('log-date').valueAsDate = new Date();
 
+  function normalizeTime(t) {
+    if (!t) return '';
+    t = t.trim();
+    if (t.includes(':')) return t;
+    if (t.length === 3) t = '0' + t;
+    if (t.length === 4) return t.slice(0, 2) + ':' + t.slice(2);
+    return t;
+  }
+
   function generateRow() {
-    const date          = document.getElementById('log-date').value;
-    const session       = document.getElementById('log-session').value.trim();
-    const apptStart     = document.getElementById('appt-start').value;
-    const apptEnd       = document.getElementById('appt-end').value;
-    const fatigue       = document.getElementById('fatigue').value;
+    const date            = document.getElementById('log-date').value;
+    const session         = document.getElementById('log-session').value.trim();
+    const travelToStart   = normalizeTime(document.getElementById('travel-to-start').value);
+    const travelToEnd     = normalizeTime(document.getElementById('travel-to-end').value);
+    const apptStart       = normalizeTime(document.getElementById('appt-start').value);
+    const apptEnd         = normalizeTime(document.getElementById('appt-end').value);
+    const travelFromStart = normalizeTime(document.getElementById('travel-from-start').value);
+    const travelFromEnd   = normalizeTime(document.getElementById('travel-from-end').value);
+    const fatigue         = document.getElementById('fatigue').value;
     const skinCondition = document.getElementById('skin-condition').value;
     const skinColor     = document.getElementById('skin-color').value;
     const nausea        = document.getElementById('nausea').value;
@@ -354,8 +391,12 @@
     const row = [
       date,
       session,
+      travelToStart,
+      travelToEnd,
       apptStart,
       apptEnd,
+      travelFromStart,
+      travelFromEnd,
       fatigue,
       skinCondition,
       skinColor,
@@ -382,9 +423,13 @@
   function clearForm() {
     document.getElementById('log-date').valueAsDate = new Date();
     document.getElementById('log-session').value    = '';
-    document.getElementById('appt-start').value     = '';
-    document.getElementById('appt-end').value       = '';
-    document.getElementById('fatigue').value        = '';
+    document.getElementById('appt-start').value         = '';
+    document.getElementById('appt-end').value           = '';
+    document.getElementById('travel-to-start').value    = '';
+    document.getElementById('travel-to-end').value      = '';
+    document.getElementById('travel-from-start').value  = '';
+    document.getElementById('travel-from-end').value    = '';
+    document.getElementById('fatigue').value            = '';
     document.getElementById('skin-condition').value = '';
     document.getElementById('skin-color').value     = '';
     document.getElementById('nausea').value         = '';

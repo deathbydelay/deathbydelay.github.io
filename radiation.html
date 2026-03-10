@@ -210,7 +210,7 @@
 
     <!-- Duration -->
     <section id="duration" class="chart-section">
-      <p class="section-label">Appointment Duration</p>
+      <p class="section-label">Duration — Appointment & Travel</p>
       <div class="chart-card">
         <div class="chart-container">
           <canvas id="duration-chart"></canvas>
@@ -294,20 +294,35 @@
       return {
         date:           fields[0]  || '',
         session:        parseInt(fields[1]) || 0,
-        apptStart:      fields[2]  || '',
-        apptEnd:        fields[3]  || '',
-        fatigue:        parseFloat(fields[4])  || null,
-        skinCondition:  parseFloat(fields[5])  || null,
-        skinColor:      parseFloat(fields[6])  || null,
-        nausea:         parseFloat(fields[7])  || null,
-        pain:           parseFloat(fields[8])  || null,
-        notes:          fields[9]  || ''
+        travelToStart:    fields[2]  || '',
+        travelToEnd:      fields[3]  || '',
+        apptStart:        fields[4]  || '',
+        apptEnd:          fields[5]  || '',
+        travelFromStart:  fields[6]  || '',
+        travelFromEnd:    fields[7]  || '',
+        fatigue:          parseFloat(fields[8])  || null,
+        skinCondition:    parseFloat(fields[9])  || null,
+        skinColor:        parseFloat(fields[10]) || null,
+        nausea:           parseFloat(fields[11]) || null,
+        pain:             parseFloat(fields[12]) || null,
+        notes:            fields[13] || ''
       };
     }).filter(r => r.date);
   }
 
   // ── Time helpers ──────────────────────────────────────────────────────────
+  function normalizeTime(t) {
+    if (!t) return '';
+    t = t.trim();
+    if (t.includes(':')) return t;
+    if (t.length === 3) t = '0' + t; // e.g. 900 -> 0900
+    if (t.length === 4) return t.slice(0, 2) + ':' + t.slice(2);
+    return t;
+  }
+
   function timeDiffMinutes(start, end) {
+    start = normalizeTime(start);
+    end   = normalizeTime(end);
     if (!start || !end) return null;
     const [sh, sm] = start.split(':').map(Number);
     const [eh, em] = end.split(':').map(Number);
@@ -412,9 +427,11 @@
 
   // ── Duration chart ────────────────────────────────────────────────────────
   function buildDurationChart(rows) {
-    const labels   = rows.map(r => `#${r.session}`);
-    const apptMins = rows.map(r => timeDiffMinutes(r.apptStart, r.apptEnd));
-    const ctx      = document.getElementById('duration-chart').getContext('2d');
+    const labels      = rows.map(r => `#${r.session}`);
+    const apptMins    = rows.map(r => timeDiffMinutes(r.apptStart,       r.apptEnd));
+    const travelToMins   = rows.map(r => timeDiffMinutes(r.travelToStart,   r.travelToEnd));
+    const travelFromMins = rows.map(r => timeDiffMinutes(r.travelFromStart, r.travelFromEnd));
+    const ctx         = document.getElementById('duration-chart').getContext('2d');
 
     new Chart(ctx, {
       type: 'line',
@@ -426,6 +443,24 @@
             data: apptMins,
             borderColor: '#c97d4e',
             backgroundColor: 'rgba(201,125,78,0.08)',
+            tension: 0,
+            pointRadius: 3,
+            fill: true
+          },
+          {
+            label: 'Travel To (min)',
+            data: travelToMins,
+            borderColor: '#6ba3a0',
+            backgroundColor: 'rgba(107,163,160,0.08)',
+            tension: 0,
+            pointRadius: 3,
+            fill: true
+          },
+          {
+            label: 'Travel From (min)',
+            data: travelFromMins,
+            borderColor: '#9e7a8a',
+            backgroundColor: 'rgba(158,122,138,0.08)',
             tension: 0,
             pointRadius: 3,
             fill: true
@@ -441,14 +476,10 @@
             ticks: { stepSize: 5 },
             grid: { color: '#2a2a26' }
           },
-          x: {
-            grid: { color: '#2a2a26' }
-          }
+          x: { grid: { color: '#2a2a26' } }
         },
         plugins: {
-          legend: {
-            labels: { boxWidth: 12, padding: 16 }
-          }
+          legend: { labels: { boxWidth: 12, padding: 16 } }
         }
       }
     });
@@ -541,6 +572,8 @@
             <th>#</th>
             <th>Date</th>
             <th>Appt Duration</th>
+            <th>Travel To</th>
+            <th>Travel From</th>
             <th>Fatigue</th>
             <th>Skin Cond.</th>
             <th>Skin Color</th>
@@ -558,6 +591,8 @@
           <td>${r.session}</td>
           <td>${formatDate(r.date)}</td>
           <td>${timeDiffMinutes(r.apptStart, r.apptEnd) !== null ? timeDiffMinutes(r.apptStart, r.apptEnd) + 'm' : '—'}</td>
+          <td>${timeDiffMinutes(r.travelToStart, r.travelToEnd) !== null ? timeDiffMinutes(r.travelToStart, r.travelToEnd) + 'm' : '—'}</td>
+          <td>${timeDiffMinutes(r.travelFromStart, r.travelFromEnd) !== null ? timeDiffMinutes(r.travelFromStart, r.travelFromEnd) + 'm' : '—'}</td>
           <td class="${colorClass(r.fatigue)}">${r.fatigue      ?? '—'}</td>
           <td class="${colorClass(r.skinCondition)}">${r.skinCondition ?? '—'}</td>
           <td class="${colorClass(r.skinColor)}">${r.skinColor   ?? '—'}</td>

@@ -290,11 +290,6 @@
     <!-- Scale fields -->
     <div class="scale-group">
       <div class="scale-field">
-        <label for="fatigue">Fatigue</label>
-        <span class="scale-hint">1 = none · 10 = severe</span>
-        <input type="number" id="fatigue" min="1" max="10" placeholder="1–10">
-      </div>
-      <div class="scale-field">
         <label for="skin-condition">Skin Condition</label>
         <span class="scale-hint">1 = normal · 10 = severely dry</span>
         <input type="number" id="skin-condition" min="1" max="10" placeholder="1–10">
@@ -303,6 +298,11 @@
         <label for="skin-color">Skin Color</label>
         <span class="scale-hint">1 = normal · 10 = severely burned</span>
         <input type="number" id="skin-color" min="1" max="10" placeholder="1–10">
+      </div>
+      <div class="scale-field">
+        <label for="fatigue">Fatigue</label>
+        <span class="scale-hint">1 = none · 10 = severe</span>
+        <input type="number" id="fatigue" min="1" max="10" placeholder="1–10">
       </div>
       <div class="scale-field">
         <label for="nausea">Nausea</label>
@@ -397,9 +397,9 @@
       apptEnd,
       travelFromStart,
       travelFromEnd,
-      fatigue,
       skinCondition,
       skinColor,
+      fatigue,
       nausea,
       pain,
       safeNotes

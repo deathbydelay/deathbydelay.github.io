@@ -300,9 +300,9 @@
         apptEnd:          fields[5]  || '',
         travelFromStart:  fields[6]  || '',
         travelFromEnd:    fields[7]  || '',
-        fatigue:          parseFloat(fields[8])  || null,
-        skinCondition:    parseFloat(fields[9])  || null,
-        skinColor:        parseFloat(fields[10]) || null,
+        skinCondition:    parseFloat(fields[8])  || null,
+        skinColor:        parseFloat(fields[9])  || null,
+        fatigue:          parseFloat(fields[10]) || null,
         nausea:           parseFloat(fields[11]) || null,
         pain:             parseFloat(fields[12]) || null,
         notes:            fields[13] || ''
@@ -574,9 +574,9 @@
             <th>Appt Duration</th>
             <th>Travel To</th>
             <th>Travel From</th>
-            <th>Fatigue</th>
             <th>Skin Cond.</th>
             <th>Skin Color</th>
+            <th>Fatigue</th>
             <th>Nausea</th>
             <th>Pain</th>
             <th>Notes</th>
@@ -593,9 +593,9 @@
           <td>${timeDiffMinutes(r.apptStart, r.apptEnd) !== null ? timeDiffMinutes(r.apptStart, r.apptEnd) + 'm' : '—'}</td>
           <td>${timeDiffMinutes(r.travelToStart, r.travelToEnd) !== null ? timeDiffMinutes(r.travelToStart, r.travelToEnd) + 'm' : '—'}</td>
           <td>${timeDiffMinutes(r.travelFromStart, r.travelFromEnd) !== null ? timeDiffMinutes(r.travelFromStart, r.travelFromEnd) + 'm' : '—'}</td>
-          <td class="${colorClass(r.fatigue)}">${r.fatigue      ?? '—'}</td>
           <td class="${colorClass(r.skinCondition)}">${r.skinCondition ?? '—'}</td>
           <td class="${colorClass(r.skinColor)}">${r.skinColor   ?? '—'}</td>
+          <td class="${colorClass(r.fatigue)}">${r.fatigue      ?? '—'}</td>
           <td class="${colorClass(r.nausea)}">${r.nausea       ?? '—'}</td>
           <td class="${colorClass(r.pain)}">${r.pain         ?? '—'}</td>
           <td class="notes-cell">${r.notes || '—'}</td>

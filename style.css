@@ -266,7 +266,7 @@ main { padding: 3rem 0 6rem; }
 .timeline-entry::before {
   content: '';
   position: absolute;
-  left: -2.4rem;
+  left: -2.25rem;
   top: 0.55rem;
   width: 9px;
   height: 9px;
@@ -277,7 +277,7 @@ main { padding: 3rem 0 6rem; }
 
 .entry-date {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 0.12em;
   color: var(--accent2);
   margin-bottom: 0.4rem;

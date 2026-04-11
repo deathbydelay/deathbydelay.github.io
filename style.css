@@ -4,7 +4,7 @@
   --bg-card:   #161614;
   --bg-line:   #1e1e1b;
   --text:      #e8e4dc;
-  --text-muted:#b8b3a9;
+  --text-muted:#8c8880;
   --accent:    #c97d4e;       /* warm amber/rust */
   --accent2:   #6ba3a0;       /* muted teal      */
   --rule:      #2a2a26;
@@ -266,7 +266,7 @@ main { padding: 3rem 0 6rem; }
 .timeline-entry::before {
   content: '';
   position: absolute;
-  left: -2.25rem;
+  left: -2.4rem;
   top: 0.55rem;
   width: 9px;
   height: 9px;
@@ -277,7 +277,7 @@ main { padding: 3rem 0 6rem; }
 
 .entry-date {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.68rem;
   letter-spacing: 0.12em;
   color: var(--accent2);
   margin-bottom: 0.4rem;
@@ -358,6 +358,6 @@ footer {
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .timeline { padding-left: 1.5rem; }
-  .timeline-entry::before { left: -1.9rem; }
+  .timeline-entry::before { left: -1.55rem; }
   footer { flex-direction: column; }
 }

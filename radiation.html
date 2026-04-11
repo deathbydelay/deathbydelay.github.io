@@ -99,7 +99,8 @@
     }
 
     table {
-      width: 100%;
+      width: max-content;
+      min-width: 100%;
       border-collapse: collapse;
       font-family: var(--font-mono);
       font-size: 0.65rem;
@@ -163,8 +164,9 @@
 
     td.notes-cell {
       white-space: normal;
-      width: 100%;
-      min-width: 160px;
+      width: 300px;
+      min-width: 200px;
+      max-width: 300px;
       color: var(--text);
       font-family: var(--font-body);
       font-size: 0.8rem;
@@ -325,19 +327,20 @@
       fields.push(current.trim());
       return {
         date:           fields[0]  || '',
-        session:        parseInt(fields[1]) || 0,
-        travelToStart:    fields[2]  || '',
-        travelToEnd:      fields[3]  || '',
-        apptStart:        fields[4]  || '',
-        apptEnd:          fields[5]  || '',
-        travelFromStart:  fields[6]  || '',
-        travelFromEnd:    fields[7]  || '',
-        skinCondition:    parseFloat(fields[8])  || null,
-        skinColor:        parseFloat(fields[9])  || null,
-        fatigue:          parseFloat(fields[10]) || null,
-        nausea:           parseFloat(fields[11]) || null,
-        pain:             parseFloat(fields[12]) || null,
-        notes:            fields[13] || ''
+        scheduledTime:  fields[1]  || '',
+        session:        parseInt(fields[2]) || 0,
+        travelToStart:    fields[3]  || '',
+        travelToEnd:      fields[4]  || '',
+        apptStart:        fields[5]  || '',
+        apptEnd:          fields[6]  || '',
+        travelFromStart:  fields[7]  || '',
+        travelFromEnd:    fields[8]  || '',
+        skinCondition:    parseFloat(fields[9])  || null,
+        skinColor:        parseFloat(fields[10]) || null,
+        fatigue:          parseFloat(fields[11]) || null,
+        nausea:           parseFloat(fields[12]) || null,
+        pain:             parseFloat(fields[13]) || null,
+        notes:            fields[14] || ''
       };
     }).filter(r => r.date);
   }
@@ -520,16 +523,15 @@
 
   // ── Deviation chart ───────────────────────────────────────────────────────
   function buildDeviationChart(rows) {
-    const SCHEDULED_HOUR   = 13; // 1:00 PM in 24hr
-    const SCHEDULED_MINUTE = 0;
-
-    const labels    = rows.map(r => `#${r.session}`);
+    const labels     = rows.map(r => `#${r.session}`);
     const deviations = rows.map(r => {
-      if (!r.apptStart) return null;
-      const t = normalizeTime(r.apptStart);
-      if (!t) return null;
-      const [h, m] = t.split(':').map(Number);
-      return (h * 60 + m) - (SCHEDULED_HOUR * 60 + SCHEDULED_MINUTE);
+      if (!r.apptStart || !r.scheduledTime) return null;
+      const actual    = normalizeTime(r.apptStart);
+      const scheduled = normalizeTime(r.scheduledTime);
+      if (!actual || !scheduled) return null;
+      const [ah, am] = actual.split(':').map(Number);
+      const [sh, sm] = scheduled.split(':').map(Number);
+      return (ah * 60 + am) - (sh * 60 + sm);
     });
 
     const ctx = document.getElementById('deviation-chart').getContext('2d');
@@ -595,6 +597,7 @@
         <colgroup>
           <col style="width: 30px">  <!-- # -->
           <col style="width: 70px">  <!-- Date -->
+          <col style="width: 36px">  <!-- Scheduled Time -->
           <col style="width: 36px">  <!-- Appt Duration -->
           <col style="width: 36px">  <!-- Travel To -->
           <col style="width: 36px">  <!-- Travel From -->
@@ -603,12 +606,13 @@
           <col style="width: 36px">  <!-- Fatigue -->
           <col style="width: 36px">  <!-- Nausea -->
           <col style="width: 36px">  <!-- Pain -->
-          <col>                      <!-- Notes — takes remaining width -->
+          <col>                      <!-- Notes — 300px max -->
         </colgroup>
         <thead>
           <tr>
             <th class="th-plain">#</th>
             <th class="th-plain">Date</th>
+            <th class="th-rotate"><div>Scheduled</div></th>
             <th class="th-rotate"><div>Appt Duration</div></th>
             <th class="th-rotate"><div>Travel To</div></th>
             <th class="th-rotate"><div>Travel From</div></th>
@@ -628,6 +632,7 @@
         <tr>
           <td class="td-left">${r.session}</td>
           <td class="td-left">${formatDate(r.date)}</td>
+          <td>${r.scheduledTime || '—'}</td>
           <td>${timeDiffMinutes(r.apptStart, r.apptEnd) !== null ? timeDiffMinutes(r.apptStart, r.apptEnd) + 'm' : '—'}</td>
           <td>${timeDiffMinutes(r.travelToStart, r.travelToEnd) !== null ? timeDiffMinutes(r.travelToStart, r.travelToEnd) + 'm' : '—'}</td>
           <td>${timeDiffMinutes(r.travelFromStart, r.travelFromEnd) !== null ? timeDiffMinutes(r.travelFromStart, r.travelFromEnd) + 'm' : '—'}</td>

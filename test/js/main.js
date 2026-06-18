@@ -6,9 +6,10 @@ fetch('entries/index.json')
   .then(filenames => {
     filenames.sort();
     console.log(filenames);
+    return Promise.all(filenames.map(filename => loadentry(filename)));
   })
+  .then(entries => {
     buildTimeline(data.entries);
-    buildStatus(data.status);
     buildTableOfContents(data.entries);
   })
   .catch(err => {
@@ -20,6 +21,13 @@ fetch('entries/index.json')
 function loadentry(filename) {
   return fetch('entries/${filename}')
     .then(response => response.text())
+    .then(markdown => parseEntry (markdown, filename));
+}
+
+// Parsing a markdown file
+
+function parseEntry(markdown, filename) {
+
 }
 
 

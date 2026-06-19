@@ -6,7 +6,7 @@ fetch('entries/index.json')
   .then(filenames => {
     filenames.sort();
     console.log(filenames);
-    return Promise.all(filenames.map(filename => loadentry(filename)));
+    return Promise.all(filenames.map(filename => loadEntry(filename)));
   })
   .then(entries => {
     buildTimeline(data.entries);
@@ -18,7 +18,7 @@ fetch('entries/index.json')
 
 // Load Entry function
 
-function loadentry(filename) {
+function loadEntry(filename) {
   return fetch('entries/${filename}')
     .then(response => response.text())
     .then(markdown => parseEntry (markdown, filename));
@@ -27,7 +27,33 @@ function loadentry(filename) {
 // Parsing a markdown file
 
 function parseEntry(markdown, filename) {
+  const lines = markdown.split('\n');
 
+  let date = '';
+  let title = '';
+  let bodyStartIndex = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    if (line.startsWith('# ')) {
+      date = line.replace('# ','');
+    }
+
+    if (line.startsWith('## ')) {
+      title = line.replace('## ', '');
+      bodyStartIndex = i + 1;
+    }
+  }
+
+  const bodyLines = lines.slice(bodyStartIndex);
+  const bodyMarkdown = bodyLines.join('\n');
+
+  return {
+    date: date,
+    title: title,
+    bodyHtml: markdownToHtml(bodyMarkdown)
+  };
 }
 
 
@@ -97,23 +123,4 @@ function buildTableOfContents(entries) {
       toggle.setAttribute('aria-expanded', 'false');
     }
   });
-}
-
-
-// ── Build Status Card ─────────────────────────────────────────────────────────
-
-function buildStatus(status) {
-  const card = document.getElementById('status-card');
-  if (!card || !status) return;
-
-  const lines = Array.isArray(status.body)
-    ? status.body
-    : status.body.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-  const paragraphs = lines.map(line => `<p>${line}</p>`).join('');
-
-  card.className = 'status-card';
-  card.innerHTML = `
-    ${paragraphs}
-    <p class="last-updated">Last updated: ${status.lastUpdated}</p>
-  `;
 }

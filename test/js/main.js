@@ -9,8 +9,8 @@ fetch('entries/index.json')
     return Promise.all(filenames.map(filename => loadEntry(filename)));
   })
   .then(entries => {
-    buildTimeline(data.entries);
-    buildTableOfContents(data.entries);
+    buildTimeline(entries);
+    buildTableOfContents(entries);
   })
   .catch(err => {
     console.error('Could not load index.json:', err);
@@ -19,7 +19,7 @@ fetch('entries/index.json')
 // Load Entry function
 
 function loadEntry(filename) {
-  return fetch('entries/${filename}')
+  return fetch(`entries/${filename}`)
     .then(response => response.text())
     .then(markdown => parseEntry (markdown, filename));
 }
@@ -56,6 +56,24 @@ function parseEntry(markdown, filename) {
   };
 }
 
+// Converting Markdown to HTML Tags
+
+function markdownToHtml(markdown) {
+  const paragraphs = markdown
+    .split(/\n\s*\n/)
+    .map(p => p.trim())
+    .filter(p => p.length > 0);
+
+  return paragraphs.map(p => {
+    const html = p
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
+
+    return `<p>${html}</p>`;
+  }).join('');
+}
+
 
   // ── Build Timeline ────────────────────────────────────────────────────────────
 
@@ -68,17 +86,10 @@ function buildTimeline(entries) {
     article.className = 'timeline-entry';
     article.id = `entry-${index}`;
 
-    // Body can be an array of paragraphs (from new-entry.html)
-    // or a plain string — handle both gracefully
-    const lines = Array.isArray(entry.body)
-      ? entry.body
-      : entry.body.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-    const paragraphs = lines.map(line => `<p>${line}</p>`).join('');
-
     article.innerHTML = `
       <p class="entry-date">${entry.date}</p>
       <h2 class="entry-title">${entry.title}</h2>
-      <div class="entry-body">${paragraphs}</div>
+      <div class="entry-body">${entry.bodyHtml}</div>
     `;
 
     container.appendChild(article);

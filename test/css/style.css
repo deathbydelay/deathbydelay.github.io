@@ -15,7 +15,10 @@
 /* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-anchor: none;
+}
 
 body {
   background: var(--bg);
@@ -45,20 +48,22 @@ body::before {
   padding: 0 clamp(1.5rem, 5vw, 3rem);
 }
 
-/* ── Header ── */
-header {
-  padding: 4rem 0 2rem;
+.inner-wrapper {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 3rem);
   border-bottom: 1px solid var(--rule);
-  animation: fadeUp 0.9s ease both;
 }
 
-.site-name {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 1.2rem;
+/* ── Header ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  padding: 3rem 0 0;
+  animation: fadeInUp 0.9s ease both;
+  transition: padding 0.1s ease;
+  background: var(--bg);
 }
 
 h1 {
@@ -68,6 +73,7 @@ h1 {
   letter-spacing: -0.01em;
   color: var(--text);
   text-align: right;
+  transition: font-size 0.1s ease;
 }
 
 h1 em {
@@ -83,11 +89,25 @@ h1 em {
   max-width: 520px;
 }
 
+.header-shrink {
+  padding: 0.8rem 0 0
+}
+
+.header-shrink h1 {
+  font-size: clamp(0.8rem, 2vw, 1.3rem);
+}
+
+.header-shrink .subtitle {
+  display: none
+}
+
 /* ── Nav ── */
 nav {
-  padding: 1.4rem 0;
-  border-bottom: 1px solid var(--rule);
-  animation: fadeUp 0.9s 0.1s ease both;
+  position: sticky;
+  top: var(--header-height, 0px);
+  z-index: 10;
+  animation: fadeInUp 0.9s 0.1s ease both;
+  background: var(--bg);
 }
 
 nav ul {
@@ -135,14 +155,14 @@ main { padding: 3rem 0 6rem; }
 /* ── Introduction ── */
 #about {
   margin-bottom: 5rem;
-  animation: fadeUp 0.9s 0.2s ease both;
+  animation: fadeInUp 0.9s 0.2s ease both;
 }
 
 #about p + p { margin-top: 1.2em; }
 
 /* ── Timeline ── */
 #timeline {
-  animation: fadeUp 0.9s 0.3s ease both;
+  animation: fadeInUp 0.9s 0.3s ease both;
 }
 
 .timeline-header {
@@ -255,6 +275,7 @@ main { padding: 3rem 0 6rem; }
   margin-bottom: 3rem;
   padding-bottom: 3rem;
   border-bottom: 1px solid var(--rule);
+  scroll-margin-top: var(--sticky-offset, 0px);
 }
 
 .timeline-entry:last-child {
@@ -295,38 +316,7 @@ main { padding: 3rem 0 6rem; }
 
 .entry-body { color: var(--text); }
 
-/* tag/status pill */
-.tag {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 0.2em 0.7em;
-  border-radius: 2px;
-  margin-bottom: 0.8rem;
-}
-
-.tag-ongoing  { background: rgba(201,125,78,0.15); color: var(--accent);  border: 1px solid rgba(201,125,78,0.3); }
-.tag-resolved { background: rgba(107,163,160,0.12); color: var(--accent2); border: 1px solid rgba(107,163,160,0.3); }
-.tag-current  { background: rgba(201,125,78,0.25); color: var(--accent);  border: 1px solid var(--accent); }
-
 /* ── Current Status ── */
-#status {
-  margin-top: 5rem;
-  animation: fadeUp 0.9s 0.4s ease both;
-}
-
-.status-card {
-  background: var(--bg-card);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--accent);
-  padding: 1.8rem 2rem;
-  margin-top: 1.5rem;
-}
-
-.status-card p + p { margin-top: 1em; }
-
 .last-updated {
   font-family: var(--font-mono);
   font-size: 0.62rem;

@@ -5,7 +5,6 @@ fetch('entries/index.json')
   .then(response => response.json())
   .then(filenames => {
     filenames.sort();
-    console.log(filenames);
     return Promise.all(filenames.map(filename => loadEntry(filename)));
   })
   .then(entries => {
@@ -105,6 +104,12 @@ function buildTableOfContents(entries) {
   if (!toggle || !list || !entries) return;
 
   // Build the list items
+  const li = document.createElement('li');
+  const a  = document.createElement('a');
+  a.href = `#entry-${entries.length-1}`
+  a.textContent = 'Jump to latest';
+  li.appendChild(a);
+  list.appendChild(li);
   entries.forEach((entry, index) => {
     const li = document.createElement('li');
     const a  = document.createElement('a');
@@ -135,3 +140,21 @@ function buildTableOfContents(entries) {
     }
   });
 }
+
+// Shrink header font when scrolled
+
+const header = document.getElementById('header');
+const nav = document.querySelector('nav');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    header.classList.add('header-shrink');
+  } else {
+    header.classList.remove('header-shrink');
+  }
+});
+
+header.addEventListener('transitionend', () => {
+  document.documentElement.style.setProperty('--header-height', header.offsetHeight + "px")
+  document.documentElement.style.setProperty('--sticky-offset', header.offsetHeight + nav.offsetHeight + "px")
+});

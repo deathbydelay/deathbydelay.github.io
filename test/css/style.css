@@ -156,6 +156,7 @@ main { padding: 3rem 0 6rem; }
 #about {
   margin-bottom: 5rem;
   animation: fadeInUp 0.9s 0.2s ease both;
+  scroll-margin-top: var(--sticky-offset, 0px);
 }
 
 #about p + p { margin-top: 1.2em; }
@@ -163,6 +164,7 @@ main { padding: 3rem 0 6rem; }
 /* ── Timeline ── */
 #timeline {
   animation: fadeInUp 0.9s 0.3s ease both;
+  scroll-margin-top: var(--sticky-offset, 0px);
 }
 
 .timeline-header {

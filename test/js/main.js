@@ -155,6 +155,8 @@ window.addEventListener('scroll', () => {
 });
 
 header.addEventListener('transitionend', () => {
-  document.documentElement.style.setProperty('--header-height', header.offsetHeight + "px")
-  document.documentElement.style.setProperty('--sticky-offset', header.offsetHeight + nav.offsetHeight + "px")
+  document.documentElement.style.setProperty('--header-height', header.getBoundingClientRect().height + "px")
+  document.documentElement.style.setProperty('--sticky-offset', header.getBoundingClientRect().height + nav.getBoundingClientRect().height + "px")
+  console.log('offsetHeight:', header.offsetHeight);
+  console.log('getBoundingClientRect:', header.getBoundingClientRect().height);
 });

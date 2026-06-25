@@ -95,13 +95,20 @@
 
     .log-table-wrapper {
       overflow-x: auto;
+      overflow-y: visible;
       margin-top: 1.5rem;
+    }
+
+    .log-table-wrapper th {
+      position: sticky;
+      top: var(--sticky-offset, 0px);
+      background: var(--bg);
     }
 
     table {
       width: max-content;
       min-width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
       font-family: var(--font-mono);
       font-size: 0.65rem;
       letter-spacing: 0.05em;
@@ -119,7 +126,7 @@
       font-weight: 400;
       white-space: nowrap;
       padding: 0;
-      vertical-align: bottom;
+      /*vertical-align: bottom;*/
       height: 100px;
     }
 
@@ -192,27 +199,30 @@
 </head>
 
 <body>
-<div class="site-wrapper">
 
   <!-- Header -->
-  <header class="page-header">
-    <p class="site-name">Radiation Therapy</p>
-    <h1>Session <em>log & progress.</em></h1>
-    <p class="subtitle">33 sessions total. Updated after each appointment.</p>
+  <header id="header">
+    <div class="inner-wrapper">
+      <h1>Session <em>log & progress.</em></h1>
+      <p class="subtitle">33 sessions total. Updated after each appointment.</p>
+    </div>
   </header>
 
   <!-- Navigation -->
   <nav>
-    <ul>
-      <li><a href="index.html">← Back</a></li>
-      <li><a href="#progress">Progress</a></li>
-      <li><a href="#symptoms">Symptoms</a></li>
-      <li><a href="#duration">Duration</a></li>
-      <li><a href="#deviation">Deviation</a></li>
-      <li><a href="#log">Full Log</a></li>
-    </ul>
+    <div class="inner-wrapper">
+      <ul>
+        <li><a href="index.html">← Back</a></li>
+        <li><a href="#progress">Progress</a></li>
+        <li><a href="#symptoms">Symptoms</a></li>
+        <li><a href="#duration">Duration</a></li>
+        <li><a href="#deviation">Deviation</a></li>
+        <li><a href="#log">Full Log</a></li>
+      </ul>
+    </div>
   </nav>
 
+<div class="site-wrapper">
   <div class="page-body">
 
     <!-- Progress -->
@@ -650,6 +660,6 @@
     container.innerHTML = html;
   }
 </script>
-
+<script src="js/main.js"></script>
 </body>
 </html>

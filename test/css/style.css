@@ -1,13 +1,13 @@
 /* ── CSS Variables ── */
 :root {
-  --bg:        #0f0f0e;
-  --bg-card:   #161614;
-  --bg-line:   #1e1e1b;
-  --text:      #e8e4dc;
-  --text-muted:#8c8880;
-  --accent:    #c97d4e;       /* warm amber/rust */
-  --accent2:   #6ba3a0;       /* muted teal      */
-  --rule:      #2a2a26;
+  --bg:        hsl(60, 3%, 6%);
+  --bg-card:   hsl(60, 5%, 8%);
+  --bg-line:   hsl(60, 5%, 11%);
+  --text:      hwb(40 87% 9%);
+  --text-muted:hsl(40, 5%, 53%);
+  --accent:    hsl(23, 53%, 55%);
+  --accent2:   hsl(177, 23%, 53%);
+  --rule:      hsl(60, 5%, 16%);
   --font-body: 'Cormorant Garamond', Georgia, serif;
   --font-mono: 'DM Mono', monospace;
 }

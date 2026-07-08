@@ -141,22 +141,7 @@ function buildTableOfContents(entries) {
   });
 }
 
-// Shrink header font when scrolled
+// Sticky nav when scrolled
 
-const header = document.getElementById('header');
 const nav = document.querySelector('nav');
-
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 50) {
-    header.classList.add('header-shrink');
-  } else {
-    header.classList.remove('header-shrink');
-  }
-});
-
-header.addEventListener('transitionend', () => {
-  document.documentElement.style.setProperty('--header-height', header.getBoundingClientRect().height + "px")
-  document.documentElement.style.setProperty('--sticky-offset', header.getBoundingClientRect().height + nav.getBoundingClientRect().height + "px")
-  console.log('offsetHeight:', header.offsetHeight);
-  console.log('getBoundingClientRect:', header.getBoundingClientRect().height);
-});
+document.documentElement.style.setProperty('--sticky-offset', (nav.getBoundingClientRect().height +20) + "px");

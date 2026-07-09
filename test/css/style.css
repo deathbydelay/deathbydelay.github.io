@@ -1,12 +1,13 @@
 /* ── CSS Variables ── */
 :root {
+  color-scheme: dark;
   --font-body: 'Cormorant Garamond', Georgia, serif;
   --font-mono: 'DM Mono', monospace;
-  --base:        hsl(23, 53%, 55%);
-  
+  --base:        hsl(23 53% 55%);
+
 /* Calculated Colors */
   --accent:     oklch(from var(--base) l calc(c * 0.5) calc(h + 144));
-  --bg:         oklch(from var(--base) calc(l * 0.25) calc(c * 0.05) h);
+  --bg:         oklch(from var(--base) calc(l * 0.25) calc(c * 0.025) h);
   --bg-card:    oklch(from var(--bg) calc(l * 1.25) c h);
   --bg-line:    oklch(from var(--bg) calc(l * 1.5) c h);
   --text:       oklch(from var(--base) calc(l * 1.4) calc(c * 0.05) h);
@@ -14,15 +15,14 @@
   --rule:       oklch(from var(--text) calc(l * 0.3) c h);
 
 /* Test Colors */
-  --new-base:       hsl(23, 53%, 55%);
+  --new-base:       hsl(217, 65%, 55%);
   --new-accent:     oklch(from var(--new-base) l calc(c * 0.5) calc(h + 144));
-  --new-bg:         oklch(from var(--new-base) calc(l * 0.25) calc(c * 0.05) h);
+  --new-bg:         oklch(from var(--new-base) calc(l * 0.25) calc(c * 0.025) h);
   --new-bg-card:    oklch(from var(--new-bg) calc(l * 1.25) c h);
   --new-bg-line:    oklch(from var(--new-bg) calc(l * 1.5) c h);
   --new-text:       oklch(from var(--new-base) calc(l * 1.4) calc(c * 0.05) h);
   --new-text-muted: oklch(from var(--new-text) calc(l * 0.7) c h);
   --new-rule:       oklch(from var(--new-text) calc(l * 0.3) c h);
-
 }
 
 /* ── Reset & Base ── */
@@ -289,13 +289,13 @@ main { padding: 3rem 0 6rem; }
 .timeline-entry::before {
   content: '';
   position: absolute;
-  left: -2.4rem;
-  top: 0.55rem;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
+  left: -2.15rem;
+  top: 0.35rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 25%;
   background: var(--base);
-  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--base);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--base);
 }
 
 .entry-date {

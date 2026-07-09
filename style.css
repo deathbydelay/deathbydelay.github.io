@@ -5,8 +5,8 @@
   --bg-line:   #1e1e1b;
   --text:      #e8e4dc;
   --text-muted:#8c8880;
-  --accent:    #c97d4e;       /* warm amber/rust */
-  --accent2:   #6ba3a0;       /* muted teal      */
+  --accent:    hsl(23, 53%, 55%);       /* warm amber/rust */
+  --accent2:   hsl(177, 23%, 53%);       /* muted teal      */
   --rule:      #2a2a26;
   --font-body: 'Cormorant Garamond', Georgia, serif;
   --font-mono: 'DM Mono', monospace;

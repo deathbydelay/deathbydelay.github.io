@@ -3,10 +3,11 @@
   color-scheme: dark;
   --font-body: 'Cormorant Garamond', Georgia, serif;
   --font-mono: 'DM Mono', monospace;
-  --base:        hsl(23 53% 55%);
+  --base:        hsl(30, 60%, 50%);
 
 /* Calculated Colors */
-  --accent:     oklch(from var(--base) l calc(c * 0.5) calc(h + 144));
+  --accent:     oklch(from var(--base) l c calc(h + 144));
+  --accent2:    oklch(from var(--base) l c calc(h - 144));
   --bg:         oklch(from var(--base) calc(l * 0.25) calc(c * 0.025) h);
   --bg-card:    oklch(from var(--bg) calc(l * 1.25) c h);
   --bg-line:    oklch(from var(--bg) calc(l * 1.5) c h);
@@ -15,8 +16,9 @@
   --rule:       oklch(from var(--text) calc(l * 0.3) c h);
 
 /* Test Colors */
-  --new-base:       hsl(217, 65%, 55%);
+  --new-base:       hsl(160, 60%, 45%);
   --new-accent:     oklch(from var(--new-base) l calc(c * 0.5) calc(h + 144));
+  --new-accent2:    oklch(from var(--new-base) l calc(c * 0.5) calc(h - 144));
   --new-bg:         oklch(from var(--new-base) calc(l * 0.25) calc(c * 0.025) h);
   --new-bg-card:    oklch(from var(--new-bg) calc(l * 1.25) c h);
   --new-bg-line:    oklch(from var(--new-bg) calc(l * 1.5) c h);
@@ -90,7 +92,7 @@ h1 {
 
 h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--base);
 }
 
 .subtitle {
@@ -127,7 +129,7 @@ nav a {
   transition: color 0.2s;
 }
 
-nav a:hover { color: var(--base); }
+nav a:hover { color: var(--accent); }
 
 /* ── Main content ── */
 main { padding: 3rem 0 6rem; }
@@ -138,7 +140,7 @@ main { padding: 3rem 0 6rem; }
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--base);
+  color: var(--accent);
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -191,9 +193,9 @@ main { padding: 3rem 0 6rem; }
   font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--base);
   background: transparent;
-  border: 1px solid rgba(107,163,160,0.3);
+  border: 1px solid hsl(from var(--base) h s l / 0.3);
   padding: 0.3em 0.9em;
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
@@ -201,8 +203,8 @@ main { padding: 3rem 0 6rem; }
 }
 
 .toc-toggle:hover {
-  color: var(--base);
-  border-color: rgba(201,125,78,0.4);
+  color: var(--accent);
+  border-color: hsl(from var(--accent) h s l / 0.4);
 }
 
 .toc-list {
@@ -212,12 +214,12 @@ main { padding: 3rem 0 6rem; }
   top: calc(100% + 0.5rem);
   background: var(--bg-card);
   border: 1px solid var(--rule);
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--base);
   list-style: none;
   min-width: 260px;
   max-width: 340px;
   z-index: 100;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.4);
 }
 
 .toc-list.toc-open {
@@ -251,7 +253,7 @@ main { padding: 3rem 0 6rem; }
   font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.1em;
-  color: var(--accent);
+  color: var(--base);
   margin-bottom: 0.2rem;
 }
 
@@ -269,7 +271,7 @@ main { padding: 3rem 0 6rem; }
   top: 0.6rem;
   bottom: 0;
   width: 1px;
-  background: linear-gradient(to bottom, var(--base) 0%, var(--rule) 100%);
+  background: linear-gradient(to bottom, var(--accent) 0%, var(--rule) 100%);
 }
 
 .timeline-entry {
@@ -294,15 +296,15 @@ main { padding: 3rem 0 6rem; }
   width: 7px;
   height: 7px;
   border-radius: 25%;
-  background: var(--base);
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--base);
+  background: var(--accent2);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent);
 }
 
 .entry-date {
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.12em;
-  color: var(--accent);
+  color: var(--base);
   margin-bottom: 0.4rem;
 }
 

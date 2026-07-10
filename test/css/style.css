@@ -3,28 +3,34 @@
   color-scheme: dark;
   --font-body: 'Cormorant Garamond', Georgia, serif;
   --font-mono: 'DM Mono', monospace;
-  --base:        hsl(30, 60%, 50%);
+  --base:          hsl(30, 60%, 50%);
+  --base-L:        50%;
+  --text-L:        92%;
+  --text-soft-L:   60%;
+  --hover-rule-L:  30%;
+  --bg-toc-L:      22%;
+  --bg-L:          18%;
 
 /* Calculated Colors */
-  --accent:     oklch(from var(--base) l c calc(h + 144));
-  --accent2:    oklch(from var(--base) l c calc(h - 144));
-  --bg:         oklch(from var(--base) calc(l * 0.25) calc(c * 0.025) h);
-  --bg-card:    oklch(from var(--bg) calc(l * 1.25) c h);
-  --bg-line:    oklch(from var(--bg) calc(l * 1.5) c h);
-  --text:       oklch(from var(--base) calc(l * 1.4) calc(c * 0.05) h);
-  --text-muted: oklch(from var(--text) calc(l * 0.7) c h);
-  --rule:       oklch(from var(--text) calc(l * 0.3) c h);
+  --accent:     oklch(from var(--base) var(--base-L)       c h);
+  --accent2:    oklch(from var(--base) var(--base-L)       c calc(h + 144));
+  --accent3:    oklch(from var(--base) var(--base-L)       c calc(h - 144));
+  --text:       oklch(from var(--base) var(--text-L)       calc(c * 0.05) h);
+  --text-muted: oklch(from var(--base) var(--text-soft-L)  calc(c * 0.05) h);
+  --hover-rule: oklch(from var(--base) var(--hover-rule-L) calc(c * 0.05) h);
+  --bg-toc:     oklch(from var(--base) var(--bg-toc-L)     calc(c * 0.05) h);
+  --bg:         oklch(from var(--base) var(--bg-L)         calc(c * 0.05) h);
 
 /* Test Colors */
-  --new-base:       hsl(160, 60%, 45%);
-  --new-accent:     oklch(from var(--new-base) l calc(c * 0.5) calc(h + 144));
-  --new-accent2:    oklch(from var(--new-base) l calc(c * 0.5) calc(h - 144));
-  --new-bg:         oklch(from var(--new-base) calc(l * 0.25) calc(c * 0.025) h);
-  --new-bg-card:    oklch(from var(--new-bg) calc(l * 1.25) c h);
-  --new-bg-line:    oklch(from var(--new-bg) calc(l * 1.5) c h);
-  --new-text:       oklch(from var(--new-base) calc(l * 1.4) calc(c * 0.05) h);
-  --new-text-muted: oklch(from var(--new-text) calc(l * 0.7) c h);
-  --new-rule:       oklch(from var(--new-text) calc(l * 0.3) c h);
+  --new-base:       hsl(240, 60%, 50%);
+  --new-accent:     oklch(from var(--new-base) var(--base-L)       c h);
+  --new-accent2:    oklch(from var(--new-base) var(--base-L)       c calc(h + 144));
+  --new-accent3:    oklch(from var(--new-base) var(--base-L)       c calc(h - 144));
+  --new-text:       oklch(from var(--new-base) var(--text-L)       calc(c * 0.05) h);
+  --new-text-muted: oklch(from var(--new-base) var(--text-soft-L)  calc(c * 0.05) h);
+  --new-hover-rule: oklch(from var(--new-base) var(--hover-rule-L) calc(c * 0.05) h);
+  --new-bg-toc:     oklch(from var(--new-base) var(--bg-toc-L)     calc(c * 0.05) h);
+  --new-bg:         oklch(from var(--new-base) var(--bg-L)         calc(c * 0.05) h);
 }
 
 /* ── Reset & Base ── */
@@ -67,7 +73,7 @@ body::before {
   max-width: 780px;
   margin: 0 auto;
   padding: 0 clamp(1.5rem, 5vw, 3rem);
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--hover-rule);
 }
 
 /* ── Header ── */
@@ -92,7 +98,7 @@ h1 {
 
 h1 em {
   font-style: italic;
-  color: var(--base);
+  color: var(--accent);
 }
 
 .subtitle {
@@ -129,7 +135,7 @@ nav a {
   transition: color 0.2s;
 }
 
-nav a:hover { color: var(--accent); }
+nav a:hover { color: var(--accent2); }
 
 /* ── Main content ── */
 main { padding: 3rem 0 6rem; }
@@ -140,7 +146,7 @@ main { padding: 3rem 0 6rem; }
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent2);
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -151,7 +157,7 @@ main { padding: 3rem 0 6rem; }
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--rule);
+  background: var(--hover-rule);
 }
 
 /* ── Introduction ── */
@@ -193,9 +199,9 @@ main { padding: 3rem 0 6rem; }
   font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--base);
+  color: var(--accent);
   background: transparent;
-  border: 1px solid hsl(from var(--base) h s l / 0.3);
+  border: 1px solid hsl(from var(--accent) h s l / 0.3);
   padding: 0.3em 0.9em;
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
@@ -203,8 +209,8 @@ main { padding: 3rem 0 6rem; }
 }
 
 .toc-toggle:hover {
-  color: var(--accent);
-  border-color: hsl(from var(--accent) h s l / 0.4);
+  color: var(--accent2);
+  border-color: hsl(from var(--accent2) h s l / 0.4);
 }
 
 .toc-list {
@@ -212,9 +218,9 @@ main { padding: 3rem 0 6rem; }
   position: absolute;
   right: 0;
   top: calc(100% + 0.5rem);
-  background: var(--bg-card);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--base);
+  background: var(--bg-toc);
+  border: 1px solid var(--hover-rule);
+  border-left: 3px solid var(--accent);
   list-style: none;
   min-width: 260px;
   max-width: 340px;
@@ -227,7 +233,7 @@ main { padding: 3rem 0 6rem; }
 }
 
 .toc-list li {
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--hover-rule);
 }
 
 .toc-list li:last-child {
@@ -245,7 +251,7 @@ main { padding: 3rem 0 6rem; }
 }
 
 .toc-list a:hover {
-  background: var(--bg-line);
+  background: var(--hover-rule);
 }
 
 .toc-date {
@@ -253,7 +259,7 @@ main { padding: 3rem 0 6rem; }
   font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.1em;
-  color: var(--base);
+  color: var(--accent);
   margin-bottom: 0.2rem;
 }
 
@@ -271,14 +277,14 @@ main { padding: 3rem 0 6rem; }
   top: 0.6rem;
   bottom: 0;
   width: 1px;
-  background: linear-gradient(to bottom, var(--accent) 0%, var(--rule) 100%);
+  background: linear-gradient(to bottom, var(--accent2) 0%, var(--hover-rule) 100%);
 }
 
 .timeline-entry {
   position: relative;
   margin-bottom: 3rem;
   padding-bottom: 3rem;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--hover-rule);
   scroll-margin-top: var(--sticky-offset, 0px);
 }
 
@@ -296,15 +302,15 @@ main { padding: 3rem 0 6rem; }
   width: 7px;
   height: 7px;
   border-radius: 25%;
-  background: var(--accent2);
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent);
+  background: var(--accent3);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent2);
 }
 
 .entry-date {
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.12em;
-  color: var(--base);
+  color: var(--accent);
   margin-bottom: 0.4rem;
 }
 
@@ -320,18 +326,9 @@ main { padding: 3rem 0 6rem; }
 
 .entry-body { color: var(--text); }
 
-/* ── Current Status ── */
-.last-updated {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  color: var(--text-muted);
-  margin-top: 1.2rem;
-  letter-spacing: 0.1em;
-}
-
 /* ── Footer ── */
 footer {
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--hover-rule);
   padding: 2rem 0;
   font-family: var(--font-mono);
   font-size: 0.65rem;

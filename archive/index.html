@@ -4,35 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A Cautionary Tale of Procrastination and Deception</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☠</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+<div class="site-wrapper">
 
   <!-- Header -->
-  <header id="header">
-    <div class="inner-wrapper">
-      <h1>A Cautionary Tale of <em>Procrastination and Deception.</em></h1>
-      <p class="subtitle">A plain account of what I've been through, written because I forget parts when repeating it.</p>
-    </div>
+  <header>
+    <h1>A Cautionary Tale of <em>Procrastination and Deception.</em></h1>
+    <p class="subtitle">A plain account of what I've been through, written because I forget parts when repeating it.</p>
   </header>
-
 
   <!-- Navigation -->
   <nav>
-    <div class="inner-wrapper">
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#timeline">Timeline</a></li>
-        <li><a href="radiation.html">Radiation Log</a></li>
-      </ul>
-    </div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#timeline">Timeline</a></li>
+      <li><a href="#status">Current Status</a></li>
+      <li><a href="radiation.html">Radiation Log</a></li>
+    </ul>
   </nav>
 
-<div class="site-wrapper">
   <main>
 
     <!-- About -->
@@ -60,6 +55,12 @@
       <div class="timeline" id="timeline-container"></div>
     </section>
 
+    <!-- Current Status -->
+    <section id="status">
+      <p class="section-label">Current Status</p>
+      <div id="status-card"></div>
+    </section>
+
   </main>
 
   <!-- Footer -->
@@ -68,6 +69,6 @@
   </footer>
 
 </div>
-<script src="js/main.js"></script>
+<script src="main.js"></script>
 </body>
 </html>

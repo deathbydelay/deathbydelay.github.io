@@ -1,0 +1,12 @@
+/* ── Test CSS Color Variables ── */
+:root {
+  --new-base:       hsl(240, 60%, 50%);
+  --new-accent:     oklch(from var(--new-base) var(--base-L)       c h);
+  --new-accent2:    oklch(from var(--new-base) var(--base-L)       c calc(h + 144));
+  --new-accent3:    oklch(from var(--new-base) var(--base-L)       c calc(h - 144));
+  --new-text:       oklch(from var(--new-base) var(--text-L)       calc(c * 0.05) h);
+  --new-text-muted: oklch(from var(--new-base) var(--text-soft-L)  calc(c * 0.05) h);
+  --new-hover-rule: oklch(from var(--new-base) var(--hover-rule-L) calc(c * 0.05) h);
+  --new-bg-toc:     oklch(from var(--new-base) var(--bg-toc-L)     calc(c * 0.05) h);
+  --new-bg:         oklch(from var(--new-base) var(--bg-L)         calc(c * 0.05) h);
+}

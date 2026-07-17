@@ -6,7 +6,7 @@
   <title>Radiation Log — A Cautionary Tale</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
     .page-header {
@@ -94,17 +94,14 @@
     }
 
     .log-table-wrapper {
+      overflow-x: auto;
       margin-top: 1.5rem;
     }
 
-    .log-table-wrapper th {
-      background: var(--bg);
-    }
-
     table {
-      width: 100%;
+      width: max-content;
       min-width: 100%;
-      border-collapse: separate;
+      border-collapse: collapse;
       font-family: var(--font-mono);
       font-size: 0.65rem;
       letter-spacing: 0.05em;
@@ -115,20 +112,34 @@
       border-bottom: 1px solid var(--accent);
     }
 
+    /* Rotated header cells */
     th {
       text-align: left;
       color: var(--accent);
       font-weight: 400;
       white-space: nowrap;
+      padding: 0;
+      vertical-align: bottom;
+      height: 100px;
+    }
+
+    th.th-rotate {
+      width: 36px;
+      min-width: 36px;
+    }
+
+    th.th-rotate > div {
+      transform: rotate(-45deg);
+      transform-origin: bottom left;
+      width: 100px;
+      margin-left: 18px;
+      margin-bottom: 4px;
+      padding-bottom: 2px;
+    }
+
+    th.th-plain {
       padding: 0.6rem 0.8rem;
-    }
-
-    th:nth-child(1) {
-      width: 0.5rem;
-    }
-
-    th:nth-child(2) {
-      width: 5rem;
+      vertical-align: bottom;
     }
 
     tbody tr {
@@ -140,13 +151,28 @@
     }
 
     td {
+      padding: 0.5rem 0.4rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    td.td-left {
       text-align: left;
       padding: 0.5rem 0.8rem;
+    }
+
+    td.notes-cell {
       white-space: normal;
+      width: 300px;
+      min-width: 200px;
+      max-width: 300px;
       color: var(--text);
       font-family: var(--font-body);
       font-size: 0.8rem;
       letter-spacing: 0;
+      text-align: left;
+      padding: 0.5rem 0.8rem;
     }
 
     /* value coloring */
@@ -166,26 +192,27 @@
 </head>
 
 <body>
+<div class="site-wrapper">
 
   <!-- Header -->
-  <header id="header">
-    <div class="inner-wrapper">
-      <h1>Session <em>log & progress.</em></h1>
-      <p class="subtitle">33 sessions total. Updated after each appointment.</p>
-    </div>
+  <header class="page-header">
+    <p class="site-name">Radiation Therapy</p>
+    <h1>Session <em>log & progress.</em></h1>
+    <p class="subtitle">33 sessions total. Updated after each appointment.</p>
   </header>
 
   <!-- Navigation -->
   <nav>
-    <div class="inner-wrapper">
-      <ul>
-        <li><a href="index.html">← Back</a></li>
-        <li><a href="#log">Full Log</a></li>
-      </ul>
-    </div>
+    <ul>
+      <li><a href="index.html">← Back</a></li>
+      <li><a href="#progress">Progress</a></li>
+      <li><a href="#symptoms">Symptoms</a></li>
+      <li><a href="#duration">Duration</a></li>
+      <li><a href="#deviation">Deviation</a></li>
+      <li><a href="#log">Full Log</a></li>
+    </ul>
   </nav>
 
-<div class="site-wrapper">
   <div class="page-body">
 
     <!-- Progress -->
@@ -237,7 +264,7 @@
 
     <!-- Full Log Table -->
     <section id="log" class="log-section">
-      <p class="section-label">Session Notes</p>
+      <p class="section-label">Full Log</p>
       <div class="log-table-wrapper">
         <div id="log-table-container">
           <p class="no-data">No sessions logged yet.</p>
@@ -263,7 +290,7 @@
   Chart.defaults.borderColor    = '#2a2a26';
 
   // ── Load CSV ──────────────────────────────────────────────────────────────
-  fetch('data/radiation-log.csv')
+  fetch('radiation-log.csv')
     .then(r => r.text())
     .then(csv => {
       const rows = parseCSV(csv);
@@ -436,70 +463,43 @@
 
   // ── Duration chart ────────────────────────────────────────────────────────
   function buildDurationChart(rows) {
-    const labels         = rows.map(r => `#${r.session}`);
-    const apptMins       = rows.map(r => timeDiffMinutes(r.apptStart,       r.apptEnd));
+    const labels      = rows.map(r => `#${r.session}`);
+    const apptMins    = rows.map(r => timeDiffMinutes(r.apptStart,       r.apptEnd));
     const travelToMins   = rows.map(r => timeDiffMinutes(r.travelToStart,   r.travelToEnd));
     const travelFromMins = rows.map(r => timeDiffMinutes(r.travelFromStart, r.travelFromEnd));
-    const totalMins      = rows.map(r => timeDiffMinutes(r.travelToStart,   r.travelFromEnd));
-    const ctx            = document.getElementById('duration-chart').getContext('2d');
+    const ctx         = document.getElementById('duration-chart').getContext('2d');
 
     new Chart(ctx, {
-      type: 'bar',
+      type: 'line',
       data: {
         labels,
         datasets: [
           {
-            label: 'Travel To (min)',
-            data: travelToMins,
-            order: 2,
-            borderColor: '#6ba3a0',
-            backgroundColor: 'rgb(107,163,160)',
+            label: 'Appointment (min)',
+            data: apptMins,
+            borderColor: '#c97d4e',
+            backgroundColor: 'rgba(201,125,78,0.08)',
             tension: 0,
             pointRadius: 3,
             fill: true
           },
           {
-            label: 'Appointment (min)',
-            data: apptMins,
-            order: 2,
-            borderColor: '#c97d4e',
-            backgroundColor: 'rgb(201,125,78)',
-            tension: 1,
+            label: 'Travel To (min)',
+            data: travelToMins,
+            borderColor: '#6ba3a0',
+            backgroundColor: 'rgba(107,163,160,0.08)',
+            tension: 0,
             pointRadius: 3,
             fill: true
           },
           {
             label: 'Travel From (min)',
             data: travelFromMins,
-            order: 2,
             borderColor: '#9e7a8a',
-            backgroundColor: 'rgb(158,122,138)',
-            tension: 1,
+            backgroundColor: 'rgba(158,122,138,0.08)',
+            tension: 0,
             pointRadius: 3,
             fill: true
-          },
-          {
-            type: 'line',
-            data: totalMins,
-            stack: 'line-total-outline',
-            order: 1,
-            borderColor: '#505000',
-            borderWidth: 5,
-            tnesion: 0,
-            pointRadius: 0,
-            fill: false
-          },
-          {
-            type: 'line',
-            label: 'Total Duration (min)',
-            data: totalMins,
-            stack: 'line-total',
-            order: 0,
-            borderColor: '#f0f000',
-            borderWidth: 2,
-            tnesion: 0,
-            pointRadius: 3,
-            fill: false
           }
         ]
       },
@@ -510,24 +510,12 @@
           y: {
             beginAtZero: true,
             ticks: { stepSize: 5 },
-            grid: { color: '#2a2a26' },
-            stacked: true
+            grid: { color: '#2a2a26' }
           },
-          x: {
-            grid: { color: '#2a2a26' },
-            stacked: true
-          }
+          x: { grid: { color: '#2a2a26' } }
         },
         plugins: {
-          legend: {
-            labels: {
-              boxWidth: 12,
-              padding: 16,
-              filter: (legendItem, data) => {
-                return data.datasets[legendItem.datasetIndex].label !== undefined;
-              }
-            }
-          }
+          legend: { labels: { boxWidth: 12, padding: 16 } }
         }
       }
     });
@@ -607,15 +595,33 @@
     let html = `
       <table>
         <colgroup>
-          <col><!-- # -->
-          <col><!-- Date -->
-          <col><!-- Notes — 300px max -->
+          <col style="width: 30px">  <!-- # -->
+          <col style="width: 70px">  <!-- Date -->
+          <col style="width: 36px">  <!-- Scheduled Time -->
+          <col style="width: 36px">  <!-- Appt Duration -->
+          <col style="width: 36px">  <!-- Travel To -->
+          <col style="width: 36px">  <!-- Travel From -->
+          <col style="width: 36px">  <!-- Skin Cond -->
+          <col style="width: 36px">  <!-- Skin Color -->
+          <col style="width: 36px">  <!-- Fatigue -->
+          <col style="width: 36px">  <!-- Nausea -->
+          <col style="width: 36px">  <!-- Pain -->
+          <col>                      <!-- Notes — 300px max -->
         </colgroup>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Date</th>
-            <th>Notes</th>
+            <th class="th-plain">#</th>
+            <th class="th-plain">Date</th>
+            <th class="th-rotate"><div>Scheduled</div></th>
+            <th class="th-rotate"><div>Appt Duration</div></th>
+            <th class="th-rotate"><div>Travel To</div></th>
+            <th class="th-rotate"><div>Travel From</div></th>
+            <th class="th-rotate"><div>Skin Cond.</div></th>
+            <th class="th-rotate"><div>Skin Color</div></th>
+            <th class="th-rotate"><div>Fatigue</div></th>
+            <th class="th-rotate"><div>Nausea</div></th>
+            <th class="th-rotate"><div>Pain</div></th>
+            <th class="th-plain">Notes</th>
           </tr>
         </thead>
         <tbody>
@@ -624,9 +630,18 @@
     logged.forEach(r => {
       html += `
         <tr>
-          <td>${r.session}</td>
-          <td>${formatDate(r.date)}</td>
-          <td>${r.notes || '—'}</td>
+          <td class="td-left">${r.session}</td>
+          <td class="td-left">${formatDate(r.date)}</td>
+          <td>${r.scheduledTime || '—'}</td>
+          <td>${timeDiffMinutes(r.apptStart, r.apptEnd) !== null ? timeDiffMinutes(r.apptStart, r.apptEnd) + 'm' : '—'}</td>
+          <td>${timeDiffMinutes(r.travelToStart, r.travelToEnd) !== null ? timeDiffMinutes(r.travelToStart, r.travelToEnd) + 'm' : '—'}</td>
+          <td>${timeDiffMinutes(r.travelFromStart, r.travelFromEnd) !== null ? timeDiffMinutes(r.travelFromStart, r.travelFromEnd) + 'm' : '—'}</td>
+          <td class="${colorClass(r.skinCondition)}">${r.skinCondition ?? '—'}</td>
+          <td class="${colorClass(r.skinColor)}">${r.skinColor   ?? '—'}</td>
+          <td class="${colorClass(r.fatigue)}">${r.fatigue      ?? '—'}</td>
+          <td class="${colorClass(r.nausea)}">${r.nausea       ?? '—'}</td>
+          <td class="${colorClass(r.pain)}">${r.pain         ?? '—'}</td>
+          <td class="notes-cell">${r.notes || '—'}</td>
         </tr>
       `;
     });
@@ -635,6 +650,6 @@
     container.innerHTML = html;
   }
 </script>
-<script src="js/main.js"></script>
+
 </body>
 </html>

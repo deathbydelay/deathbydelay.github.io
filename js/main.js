@@ -1,6 +1,5 @@
 // Fetches entries/index.json which contains all the markdown filenames, then fetch and parse each markdown file to build the timeline.
 // To add a new entry, save a yyyymmdd.md file in the entries folder and add the filename to index.json in the entries folder.
-
 fetch('entries/index.json')
   .then(response => response.json())
   .then(filenames => {
@@ -16,7 +15,6 @@ fetch('entries/index.json')
   });
 
 // Load Entry function
-
 function loadEntry(filename) {
   return fetch(`entries/${filename}`)
     .then(response => response.text())
@@ -24,7 +22,6 @@ function loadEntry(filename) {
 }
 
 // Parsing a markdown file
-
 function parseEntry(markdown, filename) {
   const lines = markdown.split('\n');
 
@@ -56,7 +53,6 @@ function parseEntry(markdown, filename) {
 }
 
 // Converting Markdown to HTML Tags
-
 function markdownToHtml(markdown) {
   const paragraphs = markdown
     .split(/\n\s*\n/)
@@ -73,9 +69,7 @@ function markdownToHtml(markdown) {
   }).join('');
 }
 
-
-  // ── Build Timeline ────────────────────────────────────────────────────────────
-
+// ── Build Timeline ────────────────────────────────────────────────────────────
 function buildTimeline(entries) {
   const container = document.getElementById('timeline-container');
   if (!container || !entries) return;
@@ -97,7 +91,6 @@ function buildTimeline(entries) {
 
 
 // ── Build Table of Contents ───────────────────────────────────────────────────
-
 function buildTableOfContents(entries) {
   const toggle = document.getElementById('toc-toggle');
   const list   = document.getElementById('toc-list');
@@ -142,6 +135,5 @@ function buildTableOfContents(entries) {
 }
 
 // Sticky nav when scrolled
-
 const nav = document.querySelector('nav');
 document.documentElement.style.setProperty('--sticky-offset', (nav.getBoundingClientRect().height +20) + "px");
